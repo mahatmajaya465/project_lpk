@@ -53,9 +53,8 @@
                         v-model="materi.kategori"
                         class="form-control"
                       >
-                        <option value="Programming">Programming</option>
-                        <option value="Design">Design</option>
-                        <option value="Marketing">Marketing</option>
+                        <option value="Program Perkantoran">Program Perkantoran</option>
+                        <option value="Desain Grafis">Desain Grafis</option>
                       </select>
                     </div>
                   </div>

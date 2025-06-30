@@ -8375,17 +8375,13 @@ var render = function render() {
     }
   }, [_c("option", {
     attrs: {
-      value: "Programming"
+      value: "Program Perkantoran"
     }
-  }, [_vm._v("Programming")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Program Perkantoran")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "Design"
+      value: "Desain Grafis"
     }
-  }, [_vm._v("Design")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "Marketing"
-    }
-  }, [_vm._v("Marketing")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Desain Grafis")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -8675,17 +8671,13 @@ var render = function render() {
     }
   }, [_c("option", {
     attrs: {
-      value: "Programming"
+      value: "Program Perkantoran"
     }
-  }, [_vm._v("Programming")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Program Perkantoran")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "Design"
+      value: "Desain Grafis"
     }
-  }, [_vm._v("Design")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "Marketing"
-    }
-  }, [_vm._v("Marketing")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Desain Grafis")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
