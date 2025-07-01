@@ -55,6 +55,9 @@ import IndexPendaftaranComponent from './components/admin/pendaftaran/IndexCompo
 import CreatePendaftaranComponent from './components/admin/pendaftaran/CreateComponent.vue';
 import EditPendaftaranComponent from './components/admin/pendaftaran/EditComponent.vue';
 
+// penggajian page component
+import IndexPenggajianComponent from './components/admin/penggajian/IndexComponent.vue';
+
 const user = Object.freeze(window.auth?.user);
 function staffMiddleware(to, from, next) {
   // if (['admin_staff', 'super_admin'].includes(user.roles)) {
@@ -73,7 +76,6 @@ function storeUserMiddleware(to, from, next) {
 }
 
 const routes = [
-  // dashboard page
   {
     path: '/v1/admin',
     component: DashboardComponent,
@@ -180,7 +182,7 @@ const routes = [
     name: "admin.kelas.edit",
     meta: { title: 'Kelas', middleware: [staffMiddleware] }
   },
-  
+
   // penjadwalan page
   {
     path: '/v1/admin/penjadwalan',
@@ -188,7 +190,7 @@ const routes = [
     name: "admin.penjadwalan.index",
     meta: { title: 'Penjadwalan', middleware: [staffMiddleware, storeUserMiddleware] }
   },
-  
+
   // absensi page
   {
     path: '/v1/admin/absensi',
@@ -237,7 +239,7 @@ const routes = [
     meta: { title: 'Pembayaran', middleware: [staffMiddleware] }
   },
 
-   // pendaftaran page
+  // pendaftaran page
   {
     path: '/v1/admin/pendaftaran/',
     component: IndexPendaftaranComponent,
@@ -255,6 +257,14 @@ const routes = [
     component: EditPendaftaranComponent,
     name: "admin.pendaftaran.edit",
     meta: { title: 'Pendaftaran', middleware: [staffMiddleware] }
+  },
+
+  // penggajian page
+  {
+    path: '/v1/admin/penggajian/',
+    component: IndexPenggajianComponent,
+    name: "admin.penggajian.index",
+    meta: { title: 'Penggajian', middleware: [staffMiddleware] }
   },
 ];
 

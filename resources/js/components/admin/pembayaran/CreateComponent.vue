@@ -116,12 +116,28 @@
                     <div class="form-group mb-3">
                       <label for="last-name-column">Tanggal Pembayaran</label>
                       <input
-                        v-model="pembayaran.tanggal_pembayaran"
+                        v-model="pembayaran.tgl_pembayaran"
                         type="date"
                         class="form-control"
                         name="tgl_pembayaran"
                         required
                       />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
+                    <div class="form-group mb-3">
+                      <label for="last-name-column">Status Pembayaran</label>
+                      <select
+                        v-model="pembayaran.status"
+                        name="status"
+                        id="status"
+                        class="form-control"
+                        required
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="settlement">Settled</option>
+                        <option value="cancel">Cancelled</option>
+                      </select>
                     </div>
                   </div>
                   <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
@@ -192,6 +208,7 @@ export default {
         metode_pembayaran: "transfer",
         tanggal_pembayaran: "",
         nominal: null,
+        status: "pending",
       },
       bukti_pembayaran: null,
     };

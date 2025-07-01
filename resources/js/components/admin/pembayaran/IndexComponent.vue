@@ -67,6 +67,7 @@
                       <th>Kelas</th>
                       <th>Program</th>
                       <th>Nominal</th>
+                      <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -89,7 +90,7 @@
                         {{ pembayaran.pendaftaran.program.nama_program }}
                       </td>
                       <td style="text-wrap: nowrap">{{ pembayaran.nominal_rp }}</td>
-                      <td style="text-wrap: nowrap">{{ pembayaran.honor_perjam_rp }}</td>
+                      <td style="text-wrap: nowrap">{{ pembayaran.status_strtoupper }}</td>
                       <td style="text-wrap: nowrap">
                         <router-link
                           :to="{

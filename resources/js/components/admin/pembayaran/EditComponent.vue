@@ -6,7 +6,7 @@
           <div class="col">
             <!-- Page pre-title -->
             <div class="page-pretitle">Overview</div>
-            <h2 class="page-title">Edit User</h2>
+            <h2 class="page-title">Edit Pembayaran</h2>
           </div>
         </div>
       </div>
@@ -16,130 +16,142 @@
         <div class="card">
           <div class="card-content">
             <div class="card-body">
-              <form class="form" @submit.prevent="submitInstrukturData">
+              <form class="form" @submit.prevent="submitPembayaranData">
                 <div class="row">
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-12 col-12" style="display: none;">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Nama</label>
-                      <input
-                        v-model="users.name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nama instruktur"
-                        name="name"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group mb-3">
-                      <label for="last-name-column">Email</label>
-                      <input
-                        v-model="users.email"
-                        type="email"
-                        class="form-control"
-                        placeholder="Email instruktur"
-                        name="email"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group mb-3">
-                      <label for="last-name-column">Jenis Kelamin</label>
+                      <label for="last-name-column">Pendaftaran</label>
                       <select
-                        v-model="users.jenis_kelamin"
-                        name="jenis_kelamin"
-                        id="jenis_kelamin"
+                        v-model="pembayaran.pendaftaran_id"
+                        name="pendaftaran_id"
+                        id="pendaftaran_id"
                         class="form-control"
+                        required
+                        @change="fetchPendaftaranDetail"
                       >
-                        <option value="laki-laki">Laki-laki</option>
-                        <option value="perempuan">Perempuan</option>
+                        <option
+                          v-for="(item, index) in pendaftarans"
+                          :key="index"
+                          :value="item.id"
+                        >
+                          {{ item.kode_pendaftaran }} - {{ item.program.nama_program }} -
+                          {{ item.peserta.user.name }}
+                        </option>
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-12 mb-3" v-if="pendaftaranDetail.id">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">Detail Pendaftaran</h5>
+                        <div class="table-responsive">
+                          <table class="table table-vcenter">
+                            <tbody>
+                              <tr>
+                                <th style="width: 250px">Nama Peserta</th>
+                                <td>:</td>
+                                <td></td>
+                                <td>{{ pendaftaranDetail.peserta.user.name }}</td>
+                                <td></td>
+                              </tr>
+
+                              <tr>
+                                <th style="width: 250px">Program Kusus</th>
+                                <td>:</td>
+                                <td></td>
+                                <td>{{ pendaftaranDetail.program.nama_program }}</td>
+                                <td></td>
+                              </tr>
+
+                              <tr>
+                                <th style="width: 250px">Kelas Kusus</th>
+                                <td>:</td>
+                                <td></td>
+                                <td>{{ pendaftaranDetail.kelas.nama_kelas }}</td>
+                                <td></td>
+                              </tr>
+
+                              <tr>
+                                <th style="width: 250px">Biaya</th>
+                                <td>:</td>
+                                <td></td>
+                                <td>{{ pendaftaranDetail.program.harga_rp }}</td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Phone</label>
+                      <label for="first-name-column">Kode Pembayaran</label>
                       <input
-                        v-model="users.phone"
+                        v-model="pembayaran.kode_pembayaran"
                         type="text"
                         class="form-control"
-                        placeholder="Phone instruktur"
-                        name="phone"
+                        placeholder="Kode pembayaran"
+                        name="name"
+                        required
                       />
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Alamat</label>
-                      <input
-                        v-model="users.alamat"
-                        type="text"
+                      <label for="last-name-column">Metode Pembayaran</label>
+                      <select
+                        v-model="pembayaran.metode_pembayaran"
+                        name="metode_pembayaran"
+                        id="metode_pembayaran"
                         class="form-control"
-                        placeholder="Alamat instruktur"
-                        name="alamat"
-                      />
+                        required
+                      >
+                        <option value="transfer">Transfer</option>
+                        <option value="tunai">Tunai</option>
+                      </select>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Keahlian</label>
+                      <label for="last-name-column">Tanggal Pembayaran</label>
                       <input
-                        v-model="instruktur.keahlian"
-                        type="text"
+                        v-model="pembayaran.tgl_pembayaran"
+                        type="date"
                         class="form-control"
-                        placeholder="Keahlian instruktur"
-                        name="keahlian"
+                        name="tgl_pembayaran"
+                        required
                       />
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Pendidikan</label>
-                      <input
-                        v-model="instruktur.pendidikan"
-                        type="text"
+                      <label for="last-name-column">Status Pembayaran</label>
+                      <select
+                        v-model="pembayaran.status"
+                        name="status"
+                        id="status"
                         class="form-control"
-                        placeholder="Pendidikan instruktur"
-                        name="pendidikan"
-                      />
+                        required
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="settlement">Settled</option>
+                        <option value="cancel">Cancelled</option>
+                      </select>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
-                      <label for="first-name-column">Honor per jam</label>
-                      <input
-                        v-model="instruktur.honor_perjam"
-                        type="number"
-                        class="form-control"
-                        placeholder="Honor per jam instruktur"
-                        name="honor_perjam"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group mb-3">
-                      <label for="first-name-column">Foto Profil</label>
+                      <label for="first-name-column">Bukti Pembayaran</label>
                       <div class="input-group">
                         <input
                           type="file"
                           class="form-control"
-                          placeholder="Foto profil instruktur"
-                          name="avatar"
+                          placeholder="Bukti pembayaran"
+                          name="bukti_pembayaran"
                           @change="handleFileUpload"
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="form-group mb-3">
-                      <label for="first-name-column">Password</label>
-                      <input
-                        v-model="users.password"
-                        type="password"
-                        class="form-control mb-1"
-                        placeholder="Password login"
-                        name="password"
-                      />
                     </div>
                   </div>
                   <div class="col-12 d-flex justify-content-end mt-4">
@@ -167,7 +179,7 @@
                     </button>
                     <router-link
                       class="btn btn-light-secondary me-1 mb-1"
-                      :to="{ name: 'admin.instruktur.index' }"
+                      :to="{ name: 'admin.pembayaran.index' }"
                       >Kembali</router-link
                     >
                   </div>
@@ -188,69 +200,93 @@ export default {
   name: "EditInstrukturComponent",
   data() {
     return {
-      avatar: null,
-      users: {},
-      instruktur: {},
+      pendaftarans: [],
+      pendaftaranDetail: {},
+      pembayaran: {
+        pendaftaran_id: null,
+        kode_pembayaran: "",
+        metode_pembayaran: "transfer",
+        tanggal_pembayaran: "",
+        nominal: null,
+        status: "pending",
+      },
+      bukti_pembayaran: null,
     };
   },
   async created() {
-    this.fetchInstrukturData();
+    this.fetchPembayaranData();
+    this.fetchPendaftaranData();
   },
   methods: {
-    handleFileUpload(event) {
-      this.avatar = event.target.files[0];
-    },
-    async fetchInstrukturData() {
+    fetchPembayaranData() {
       Loading();
+      const pembayaranId = this.$route.params.id;
+      if (pembayaranId) {
+        axios
+          .get(`/v1/pembayaran/find/${pembayaranId}`)
+          .then((response) => {
+            this.pembayaran = response.data.data;
+            this.fetchPendaftaranDetail();
+            Swal.close();
+          })
+          .catch((error) => {
+            AlertMsg(error.response.data.message, true);
+          });
+      }
+    },
+    fetchPendaftaranDetail() {
+      const pendaftaranId = this.pembayaran.pendaftaran_id;
+      if (pendaftaranId) {
+        axios
+          .get(`/v1/pendaftaran/find/${pendaftaranId}`)
+          .then((response) => {
+            this.pendaftaranDetail = response.data.data;
+            this.pembayaran.nominal = this.pendaftaranDetail.program.harga;
+            this.pembayaran.pendaftaran_id = pendaftaranId;
+          })
+          .catch((error) => {
+            AlertMsg(error.response.data.message, true);
+          });
+      } else {
+        this.pendaftaranDetail = {};
+        this.pembayaran.nominal = null;
+      }
+    },
+    handleFileUpload(event) {
+      this.bukti_pembayaran = event.target.files[0];
+    },
+    async fetchPendaftaranData() {
       try {
-        const response = await axios.get("/v1/instruktur/find/" + this.$route.params.id);
-        const data = response.data.data;
-        this.instruktur = data;
+        const response = await axios.get("/v1/pendaftaran/list", {
+          params: {
+            status: "pending",
+          },
+        });
 
-        this.fetchUsersData();
+        const data = response.data;
+
+        this.pendaftarans = data.data;
       } catch (error) {
-        Swal.close();
         AlertMsg(error.response.data.message, true);
       }
     },
-    async fetchUsersData() {
-      try {
-        const response = await axios.get("/v1/users/find/" + this.instruktur.user_id);
-        const data = response.data.data;
-        this.users = {
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          avatar: data.avatar,
-          roles: data.roles,
-          jenis_kelamin: data.jenis_kelamin,
-          phone: data.phone,
-          alamat: data.alamat,
-        };
-
-        Swal.close();
-      } catch (error) {
-        Swal.close();
-        AlertMsg(error.response.data.message, true);
-      }
-    },
-    submitInstrukturData() {
+    submitPembayaranData() {
       Loading();
       try {
         const formData = new FormData();
 
-        Object.entries(this.users).forEach(([key, value]) => {
+        Object.entries(this.pembayaran).forEach(([key, value]) => {
           if (value !== null && value !== undefined) {
             formData.append(key, value);
           }
         });
 
-        if (this.avatar !== null) {
-          formData.append("avatar", this.avatar);
+        if (this.bukti_pembayaran !== null) {
+          formData.append("bukti_pembayaran", this.bukti_pembayaran);
         }
 
         axios
-          .post("/v1/users/update/" + this.instruktur.user_id, formData, {
+          .post("/v1/pembayaran/update/" + this.pembayaran.id, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -258,11 +294,9 @@ export default {
           .then((response) => {
             const data = response.data;
 
-            axios.post("/v1/instruktur/update/" + this.$route.params.id, this.instruktur);
-
             AlertMsg(data.message, data.error);
             if (!data.error) {
-              this.$router.push({ name: "admin.instruktur.index" });
+              this.$router.push({ name: "admin.pembayaran.index" });
             }
           });
       } catch (error) {

@@ -17,7 +17,7 @@ class CreateAbsensiTable extends Migration
             $table->bigIncrements('id');
             $table->string('user_id', 225)->nullable();
             $table->string('jadwal_id', 225)->nullable();
-            $table->string('type', 225)->default('check_in');
+            $table->string('type', 225)->default('clock_in');
             $table->string('tgl_absensi', 225)->nullable();
             $table->string('lat', 225)->nullable();
             $table->string('lng', 225)->nullable();

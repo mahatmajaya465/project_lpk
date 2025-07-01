@@ -22,7 +22,7 @@ class AbsensiTransformer extends JsonResource
             'lng' => $this->lng,
             'lokasi' => $this->lokasi,
             'type' => $this->type,
-            'type_format' => $this->type == 'check_in' ? 'Check In' : 'Check Out',
+            'type_format' => $this->type == 'clock_in' ? 'Clock In' : 'Clock Out',
             'user' => new UsersTransformer($this->user)
         ];
     }

@@ -173,8 +173,8 @@
               <div class="mb-3">
                 <label class="form-label">Tipe Absensi</label>
                 <select class="form-select" v-model="absen.type">
-                  <option value="check_in">Check In</option>
-                  <option value="check_out">Check Out</option>
+                  <option value="clock_in">Clock In</option>
+                  <option value="clock_out">Clock Out</option>
                 </select>
               </div>
 
@@ -257,8 +257,8 @@
                       <span
                         :class="{
                           badge: true,
-                          'bg-yellow text-yellow-fg': riwayat.type === 'check_in',
-                          'bg-green text-green-fg': riwayat.type === 'check_out',
+                          'bg-yellow text-yellow-fg': riwayat.type === 'clock_in',
+                          'bg-green text-green-fg': riwayat.type === 'clock_out',
                         }"
                       >
                         {{ riwayat.type_format }}</span
@@ -306,7 +306,7 @@ export default {
         latitude: "",
         longitude: "",
         lokasi: "",
-        type: "check_in", // Default type for absensi
+        type: "clock_in", // Default type for absensi
       },
     };
   },

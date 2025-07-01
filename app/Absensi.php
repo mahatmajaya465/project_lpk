@@ -15,7 +15,7 @@ class Absensi extends Model
         'user_id',
         'jadwal_id',
         'tgl_absensi',
-        'type',
+        'type', // 'type' can be 'clock_in' or 'clock_out'
         'lat',
         'lng',
         'lokasi',
@@ -59,7 +59,7 @@ class Absensi extends Model
         $absensi->user_id = auth()->user()->id;
         $absensi->jadwal_id = $request->id;
         $absensi->tgl_absensi = now();
-        $absensi->type = $request->type ?? 'check_in';
+        $absensi->type = $request->type ?? 'clock_in'; // Default to 'clock_in' if not provided
         $absensi->lat = $request->latitude;
         $absensi->lng = $request->longitude;
         $absensi->lokasi = $request->lokasi;

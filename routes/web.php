@@ -196,4 +196,21 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         Route::post('update/{id}', 'PembayaranController@update')->name('update');
         Route::post('delete/{id}', 'PembayaranController@delete')->name('delete');
     });
+
+    // penggajian
+    Route::prefix('admin')->group(function () {
+        Route::prefix('penggajian')->name('penggajian.')->group(function () {
+            Route::get('', 'PenggajianController@index')->name('index');
+            Route::get('{id}', 'PenggajianController@index')->name('index');
+            Route::get('create', 'PenggajianController@index')->name('index');
+        });
+    });
+    Route::prefix('penggajian')->name('penggajian.')->group(function () {
+        Route::get('gajiInstruktur', 'PenggajianController@gajiInstruktur')->name('gajiInstruktur');
+        Route::get('find/{id}', 'PenggajianController@find')->name('find');
+
+        Route::post('store', 'PenggajianController@store')->name('store');
+        Route::post('update/{id}', 'PenggajianController@update')->name('update');
+        Route::post('delete/{id}', 'PenggajianController@delete')->name('delete');
+    });
 });
