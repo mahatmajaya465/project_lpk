@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pendaftaran extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'pendaftaran';
 
     protected $fillable = [
@@ -54,11 +54,21 @@ class Pendaftaran extends Model
             });
         }
 
+        if ($request->periode) {
+            $pendaftaran = $pendaftaran->where('created_at', 'LIKE', "%$request->periode%");
+        }
+
         if ($request->status) {
             $pendaftaran = $pendaftaran->where('status', $request->status);
         }
 
-        return $pendaftaran->paginate(100);
+        if ($request->pagination == 'false') {
+            $per_page = PHP_INT_MAX;
+        } else {
+            $per_page = $request->per_page ?? 100;
+        }
+
+        return $pendaftaran->paginate($per_page);
     }
 
     public function store($request): Pendaftaran

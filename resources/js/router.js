@@ -55,6 +55,12 @@ import IndexPendaftaranComponent from './components/admin/pendaftaran/IndexCompo
 import CreatePendaftaranComponent from './components/admin/pendaftaran/CreateComponent.vue';
 import EditPendaftaranComponent from './components/admin/pendaftaran/EditComponent.vue';
 
+// laporan page component
+import IndexLaporanPendaftaranComponent from './components/admin/laporan_pendaftaran/IndexComponent.vue';
+import IndexLaporanKelasComponent from './components/admin/laporan_kelas/IndexComponent.vue';
+import IndexLaporanPembayaranComponent from './components/admin/laporan_pembayaran/IndexComponent.vue';
+import IndexLaporanPenggajianComponent from './components/admin/laporan_penggajian/IndexComponent.vue';
+
 // penggajian page component
 import IndexPenggajianComponent from './components/admin/penggajian/IndexComponent.vue';
 
@@ -257,6 +263,32 @@ const routes = [
     component: EditPendaftaranComponent,
     name: "admin.pendaftaran.edit",
     meta: { title: 'Pendaftaran', middleware: [staffMiddleware] }
+  },
+
+  // laporan page
+  {
+    path: '/v1/admin/laporan/pendaftaran/',
+    component: IndexLaporanPendaftaranComponent,
+    name: "admin.laporan_pendaftaran.index",
+    meta: { title: 'Laporan Pendaftaran', middleware: [staffMiddleware] }
+  },
+  {
+    path: '/v1/admin/laporan/kelas/',
+    component: IndexLaporanKelasComponent,
+    name: "admin.laporan_kelas.index",
+    meta: { title: 'Laporan Kelas', middleware: [staffMiddleware] }
+  },
+  {
+    path: '/v1/admin/laporan/pembayaran/',
+    component: IndexLaporanPembayaranComponent,
+    name: "admin.laporan_pembayaran.index",
+    meta: { title: 'Laporan Pembayaran', middleware: [staffMiddleware] }
+  },
+  {
+    path: '/v1/admin/laporan/penggajian/',
+    component: IndexLaporanPenggajianComponent,
+    name: "admin.laporan_penggajian.index",
+    meta: { title: 'Laporan Penggajian', middleware: [staffMiddleware] }
   },
 
   // penggajian page

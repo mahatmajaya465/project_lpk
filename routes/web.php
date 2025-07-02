@@ -213,4 +213,14 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         Route::post('update/{id}', 'PenggajianController@update')->name('update');
         Route::post('delete/{id}', 'PenggajianController@delete')->name('delete');
     });
+
+    // laporan
+    Route::prefix('admin')->group(function () {
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('pendaftaran', 'PendaftaranController@index')->name('index');
+            Route::get('kelas', 'KelasController@index')->name('index');
+            Route::get('pembayaran', 'PembayaranController@index')->name('index');
+            Route::get('penggajian', 'PenggajianController@index')->name('index');
+        });
+    });
 });

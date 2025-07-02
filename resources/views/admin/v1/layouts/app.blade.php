@@ -523,25 +523,25 @@
                                         <div class="dropdown-menu-column">
                                             <router-link class="dropdown-item"
                                                 :to="{
-                                                    name: 'admin.users.index'
+                                                    name: 'admin.laporan_pendaftaran.index'
                                                 }">
                                                 Lap. Pendaftaran
                                             </router-link>
                                             <router-link class="dropdown-item"
                                                 :to="{
-                                                    name: 'admin.users.index'
+                                                    name: 'admin.laporan_kelas.index'
                                                 }">
                                                 Lap. Kelas Kursus
                                             </router-link>
                                             <router-link class="dropdown-item"
                                                 :to="{
-                                                    name: 'admin.users.index'
+                                                    name: 'admin.laporan_pembayaran.index'
                                                 }">
                                                 Lap. Pembayaran
                                             </router-link>
                                             <router-link class="dropdown-item"
                                                 :to="{
-                                                    name: 'admin.users.index'
+                                                    name: 'admin.laporan_penggajian.index'
                                                 }">
                                                 Lap. Penggajian
                                             </router-link>
