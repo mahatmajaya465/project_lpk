@@ -113,9 +113,8 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <a href="./profile.html" class="dropdown-item">Profile</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="./settings.html" class="dropdown-item">Settings</a>
+                            {{-- <a href="./profile.html" class="dropdown-item">Profile</a>
+                            <div class="dropdown-divider"></div> --}}
                             <a href="./sign-in.html" class="dropdown-item">Logout</a>
                         </div>
                     </div>
@@ -152,63 +151,12 @@
                                 </span>
                             </router-link>
                         </li>
-                        <li
-                            :class="{
-                                'nav-item dropdown': true,
-                                'active': [
-                                        'admin.instruktur.index',
-                                        'admin.instruktur.create',
-                                        'admin.instruktur.edit',
-                                        'admin.users.index',
-                                        'admin.users.create',
-                                        'admin.users.edit',
-                                        'admin.peserta.index',
-                                        'admin.peserta.create',
-                                        'admin.peserta.edit'
-                                    ]
-                                    .includes($route.name)
-                            }">
-                            <a :class="{
-                                'nav-link dropdown-toggle': true,
-                                'active': [
-                                        'admin.instruktur.index',
-                                        'admin.instruktur.create',
-                                        'admin.instruktur.edit',
-                                        'admin.users.index',
-                                        'admin.users.create',
-                                        'admin.users.edit',
-                                        'admin.peserta.index',
-                                        'admin.peserta.create',
-                                        'admin.peserta.edit'
-                                    ]
-                                    .includes($route.name)
-                            }"
-                                href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
-                                role="button" aria-expanded="true">
-                                <span
-                                    class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
-                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M4 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                        <path
-                                            d="M4 13m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                        <path
-                                            d="M14 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                        <path
-                                            d="M14 15m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Data Master
-                                </span>
-                            </a>
-                            <div
+
+                        @if (in_array(auth()->user()->roles, ['super_admin']))
+                            <li
                                 :class="{
-                                    'dropdown-menu': true,
-                                    'show': [
+                                    'nav-item dropdown': true,
+                                    'active': [
                                             'admin.instruktur.index',
                                             'admin.instruktur.create',
                                             'admin.instruktur.edit',
@@ -221,83 +169,91 @@
                                         ]
                                         .includes($route.name)
                                 }">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.users.index'
-                                            }">
-                                            Users
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.instruktur.index'
-                                            }">
-                                            Instruktur
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.peserta.index'
-                                            }">
-                                            Peserta
-                                        </router-link>
+                                <a :class="{
+                                    'nav-link dropdown-toggle': true,
+                                    'active': [
+                                            'admin.instruktur.index',
+                                            'admin.instruktur.create',
+                                            'admin.instruktur.edit',
+                                            'admin.users.index',
+                                            'admin.users.create',
+                                            'admin.users.edit',
+                                            'admin.peserta.index',
+                                            'admin.peserta.create',
+                                            'admin.peserta.edit'
+                                        ]
+                                        .includes($route.name)
+                                }"
+                                    href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
+                                    role="button" aria-expanded="true">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M4 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                            <path
+                                                d="M4 13m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                            <path
+                                                d="M14 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                            <path
+                                                d="M14 15m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Data Master
+                                    </span>
+                                </a>
+                                <div
+                                    :class="{
+                                        'dropdown-menu': true,
+                                        'show': [
+                                                'admin.instruktur.index',
+                                                'admin.instruktur.create',
+                                                'admin.instruktur.edit',
+                                                'admin.users.index',
+                                                'admin.users.create',
+                                                'admin.users.edit',
+                                                'admin.peserta.index',
+                                                'admin.peserta.create',
+                                                'admin.peserta.edit'
+                                            ]
+                                            .includes($route.name)
+                                    }">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.users.index'
+                                                }">
+                                                Users
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.instruktur.index'
+                                                }">
+                                                Instruktur
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.peserta.index'
+                                                }">
+                                                Peserta
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li
-                            :class="{
-                                'nav-item dropdown': true,
-                                'active': [
-                                        'admin.program.index',
-                                        'admin.program.create',
-                                        'admin.program.edit',
-                                        'admin.kelas.index',
-                                        'admin.kelas.create',
-                                        'admin.kelas.edit',
-                                        'admin.penjadwalan.index',
-                                        'admin.materi.index',
-                                        'admin.materi.create',
-                                        'admin.materi.edit'
-                                    ]
-                                    .includes($route.name)
-                            }">
-                            <a :class="{
-                                'nav-link dropdown-toggle': true,
-                                'active': [
-                                        'admin.program.index',
-                                        'admin.program.create',
-                                        'admin.program.edit',
-                                        'admin.kelas.index',
-                                        'admin.kelas.create',
-                                        'admin.kelas.edit',
-                                        'admin.penjadwalan.index',
-                                        'admin.materi.index',
-                                        'admin.materi.create',
-                                        'admin.materi.edit'
-                                    ]
-                                    .includes($route.name)
-                            }"
-                                href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
-                                role="button" aria-expanded="true">
-                                <span
-                                    class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="currentColor"
-                                        class="icon icon-tabler icons-tabler-filled icon-tabler-affiliate">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M18.5 3a2.5 2.5 0 1 1 -.912 4.828l-4.556 4.555a5.475 5.475 0 0 1 .936 3.714l2.624 .787a2.5 2.5 0 1 1 -.575 1.916l-2.623 -.788a5.5 5.5 0 0 1 -10.39 -2.29l-.004 -.222l.004 -.221a5.5 5.5 0 0 1 2.984 -4.673l-.788 -2.624a2.498 2.498 0 0 1 -2.194 -2.304l-.006 -.178l.005 -.164a2.5 2.5 0 1 1 4.111 2.071l.787 2.625a5.475 5.475 0 0 1 3.714 .936l4.555 -4.556a2.487 2.487 0 0 1 -.167 -.748l-.005 -.164l.005 -.164a2.5 2.5 0 0 1 2.495 -2.336z" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Kursus
-                                </span>
-                            </a>
-                            <div
+                            </li>
+                        @endif
+
+                        @if (in_array(auth()->user()->roles, ['super_admin']))
+                            <li
                                 :class="{
-                                    'dropdown-menu': true,
-                                    'show': [
+                                    'nav-item dropdown': true,
+                                    'active': [
                                             'admin.program.index',
                                             'admin.program.create',
                                             'admin.program.edit',
@@ -311,30 +267,81 @@
                                         ]
                                         .includes($route.name)
                                 }">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.program.index'
-                                            }">
-                                            Program
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.kelas.index'
-                                            }">
-                                            Kelas
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.materi.index'
-                                            }">
-                                            Materi
-                                        </router-link>
+                                <a :class="{
+                                    'nav-link dropdown-toggle': true,
+                                    'active': [
+                                            'admin.program.index',
+                                            'admin.program.create',
+                                            'admin.program.edit',
+                                            'admin.kelas.index',
+                                            'admin.kelas.create',
+                                            'admin.kelas.edit',
+                                            'admin.penjadwalan.index',
+                                            'admin.materi.index',
+                                            'admin.materi.create',
+                                            'admin.materi.edit'
+                                        ]
+                                        .includes($route.name)
+                                }"
+                                    href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
+                                    role="button" aria-expanded="true">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="currentColor"
+                                            class="icon icon-tabler icons-tabler-filled icon-tabler-affiliate">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M18.5 3a2.5 2.5 0 1 1 -.912 4.828l-4.556 4.555a5.475 5.475 0 0 1 .936 3.714l2.624 .787a2.5 2.5 0 1 1 -.575 1.916l-2.623 -.788a5.5 5.5 0 0 1 -10.39 -2.29l-.004 -.222l.004 -.221a5.5 5.5 0 0 1 2.984 -4.673l-.788 -2.624a2.498 2.498 0 0 1 -2.194 -2.304l-.006 -.178l.005 -.164a2.5 2.5 0 1 1 4.111 2.071l.787 2.625a5.475 5.475 0 0 1 3.714 .936l4.555 -4.556a2.487 2.487 0 0 1 -.167 -.748l-.005 -.164l.005 -.164a2.5 2.5 0 0 1 2.495 -2.336z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Kursus
+                                    </span>
+                                </a>
+                                <div
+                                    :class="{
+                                        'dropdown-menu': true,
+                                        'show': [
+                                                'admin.program.index',
+                                                'admin.program.create',
+                                                'admin.program.edit',
+                                                'admin.kelas.index',
+                                                'admin.kelas.create',
+                                                'admin.kelas.edit',
+                                                'admin.penjadwalan.index',
+                                                'admin.materi.index',
+                                                'admin.materi.create',
+                                                'admin.materi.edit'
+                                            ]
+                                            .includes($route.name)
+                                    }">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.program.index'
+                                                }">
+                                                Program
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.kelas.index'
+                                                }">
+                                                Kelas
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.materi.index'
+                                                }">
+                                                Materi
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        @endif
+
                         <li
                             :class="{
                                 'nav-item': true,
@@ -369,7 +376,9 @@
                                 </span>
                             </router-link>
                         </li>
-                        <li
+                        
+                        @if (!in_array(auth()->user()->roles, ['instruktur']))
+                            <li
                             :class="{
                                 'nav-item dropdown': true,
                                 'active': [
@@ -456,84 +465,91 @@
                                             }">
                                             Pembayaran
                                         </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.penggajian.index'
-                                            }">
-                                            Penggajian
-                                        </router-link>
+
+                                        @if (in_array(auth()->user()->roles, ['super_admin']))
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.penggajian.index'
+                                                }">
+                                                Penggajian
+                                            </router-link>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <li
-                            :class="{
-                                'nav-item dropdown': true,
-                                'active': ['admin.company_information.index', 'admin.users.index']
-                                    .includes($route.name)
-                            }">
-                            <a :class="{
-                                'nav-link dropdown-toggle': true,
-                                'active': ['admin.company_information.index', 'admin.users.index']
-                                    .includes($route.name)
-                            }"
-                                href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
-                                role="button" aria-expanded="true">
-                                <span
-                                    class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-chart-histogram">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M3 3v18h18" />
-                                        <path d="M20 18v3" />
-                                        <path d="M16 16v5" />
-                                        <path d="M12 13v8" />
-                                        <path d="M8 16v5" />
-                                        <path d="M3 11c6 0 5 -5 9 -5s3 5 9 5" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Laporan
-                                </span>
-                            </a>
-                            <div
+                        @endif
+
+                        @if (in_array(auth()->user()->roles, ['super_admin', 'pimpinan']))
+                            <li
                                 :class="{
-                                    'dropdown-menu': true,
-                                    'show': ['admin.company_information.index', 'admin.users.index']
+                                    'nav-item dropdown': true,
+                                    'active': ['admin.company_information.index', 'admin.users.index']
                                         .includes($route.name)
                                 }">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.users.index'
-                                            }">
-                                            Lap. Pendaftaran
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.users.index'
-                                            }">
-                                            Lap. Kelas Kursus
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.users.index'
-                                            }">
-                                            Lap. Pembayaran
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.users.index'
-                                            }">
-                                            Lap. Penggajian
-                                        </router-link>
+                                <a :class="{
+                                    'nav-link dropdown-toggle': true,
+                                    'active': ['admin.company_information.index', 'admin.users.index']
+                                        .includes($route.name)
+                                }"
+                                    href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
+                                    role="button" aria-expanded="true">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-chart-histogram">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M3 3v18h18" />
+                                            <path d="M20 18v3" />
+                                            <path d="M16 16v5" />
+                                            <path d="M12 13v8" />
+                                            <path d="M8 16v5" />
+                                            <path d="M3 11c6 0 5 -5 9 -5s3 5 9 5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Laporan
+                                    </span>
+                                </a>
+                                <div
+                                    :class="{
+                                        'dropdown-menu': true,
+                                        'show': ['admin.company_information.index', 'admin.users.index']
+                                            .includes($route.name)
+                                    }">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.users.index'
+                                                }">
+                                                Lap. Pendaftaran
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.users.index'
+                                                }">
+                                                Lap. Kelas Kursus
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.users.index'
+                                                }">
+                                                Lap. Pembayaran
+                                            </router-link>
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.users.index'
+                                                }">
+                                                Lap. Penggajian
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -559,14 +575,14 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <router-link
+                            {{-- <router-link
                                 :to="{
                                     name: 'admin.users.edit',
                                     params: {
                                         id: {{ auth()->user()->id }}
                                     }
                                 }"
-                                class="dropdown-item">Profile</router-link>
+                                class="dropdown-item">Profile</router-link> --}}
                             <a href="#!" onclick="Logout()" class="dropdown-item">Logout</a>
                         </div>
                     </div>

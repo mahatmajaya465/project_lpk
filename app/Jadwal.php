@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Jadwal extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'jadwal';
 
     protected $fillable = [
@@ -47,14 +47,27 @@ class Jadwal extends Model
 
         return $jadwal->paginate(100);
     }
-    
+
     public function listAbsensi($request): LengthAwarePaginator
     {
-        if(auth()->user()->roles == "super_admin") {
-            $jadwal = $this->whereNull('deleted_at');
-        } else {
+        if (auth()->user()->roles == "instruktur") {
             $instruktur = Instruktur::where('user_id', $request->user()->id)->first();
             $jadwal = $this->whereNull('deleted_at')->where('instruktur_id', $instruktur->id);
+        } else if (auth()->user()->roles == "student") {
+            $peserta = Peserta::where('user_id', $request->user()->id)->first();
+            if (!$peserta) {
+                abort(404, 'Peserta not found');
+            }
+            $kelas_diikuti = Pendaftaran::where('peserta_id', $peserta->id)
+                ->where('status', 'settlement')
+                ->pluck('kelas_kursus_id');
+
+            $jadwal = $this->whereNull('deleted_at')
+                ->whereHas('kelas', function ($query) use ($kelas_diikuti) {
+                    $query->whereIn('id', $kelas_diikuti);
+                });
+        } else {
+            $jadwal = $this->whereNull('deleted_at');
         }
 
         return $jadwal->paginate(100);

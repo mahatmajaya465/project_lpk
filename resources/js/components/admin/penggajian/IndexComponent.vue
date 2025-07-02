@@ -18,13 +18,12 @@
             <div class="card">
               <div class="card-body">
                 <div class="d-flex mb-3 justify-content-end">
-                  <form @submit.prevent="fetchInstrukturData">
+                  <form @submit.prevent="fetchAllPenggajianData">
                     <div class="input-group">
                       <input
                         type="month"
                         class="form-control"
                         v-model="filter.periode"
-                        @change="changePeriode"
                       />
                       <button class="btn" type="submit" style="height: 36px">Go!</button>
                     </div>
@@ -198,10 +197,6 @@ export default {
       } catch (error) {
         console.error(`Error fetching penggajian for instruktur ${instrukturId}:`, error);
       }
-    },
-    changePeriode(event) {
-      this.filter.periode = event.target.value;
-      this.fetchAllPenggajianData();
     },
   },
 };

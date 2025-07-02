@@ -39,6 +39,7 @@
                         name="peserta_id"
                         id="peserta_id"
                         class="form-control"
+                        :readonly="user.roles == 'student'"
                         required
                       >
                         <option
@@ -137,6 +138,7 @@ export default {
       pesertas: [],
       programs: [],
       kelas: [],
+      user: this.$user,
     };
   },
   mounted() {
@@ -154,6 +156,12 @@ export default {
         const data = response.data;
 
         this.pesertas = data.data;
+
+        if (this.user.roles === "student") {
+          this.pendaftaran.peserta_id = this.pesertas.find(
+            (peserta) => peserta.user_id == this.user.id
+          ).id;
+        }
       } catch (error) {
         AlertMsg(error.response.data.message, true);
       }

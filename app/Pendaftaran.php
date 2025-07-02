@@ -37,7 +37,14 @@ class Pendaftaran extends Model
 
     public function list($request): LengthAwarePaginator
     {
+        $auth = auth()->user();
+
         $pendaftaran = $this->whereNull('deleted_at');
+
+        if ($auth->roles == 'student') {
+            $peserta = Peserta::where('user_id', $auth->id)->first();
+            $pendaftaran = $pendaftaran->where('peserta_id', $peserta->id);
+        }
 
         $search = $request->search;
 

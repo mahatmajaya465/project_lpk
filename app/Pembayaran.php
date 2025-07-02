@@ -24,7 +24,15 @@ class Pembayaran extends Model
 
     public function list($request): LengthAwarePaginator
     {
+        $auth = auth()->user();
+
         $pembayaran = $this->whereNull('deleted_at');
+
+        if ($auth->roles == 'student') {
+            $peserta = Peserta::where('user_id', $auth->id)->first();
+            $pendaftaranIds = Pendaftaran::where('peserta_id', $peserta->id)->pluck('id');
+            $pembayaran = $pembayaran->whereIn('pendaftaran_id', $pendaftaranIds);
+        }
 
         $search = $request->search;
 
@@ -35,6 +43,10 @@ class Pembayaran extends Model
                     ->orWhere('status', 'LIKE', "%$search%")
                     ->orWhere('metode_pembayaran', 'LIKE', "%$search%");
             });
+        }
+
+        if($request->status) {
+            $pembayaran = $pembayaran->where('status', $request->status);
         }
 
         return $pembayaran->paginate(100);
@@ -53,6 +65,12 @@ class Pembayaran extends Model
 
         $pembayaran->save();
 
+        $pendaftaran = Pendaftaran::find($request->pendaftaran_id);
+        if ($pendaftaran) {
+            $pendaftaran->status = $request->status ?? 'pending';
+            $pendaftaran->save();
+        }
+
         return $pembayaran;
     }
 
@@ -68,6 +86,12 @@ class Pembayaran extends Model
         $pembayaran->metode_pembayaran = $request->metode_pembayaran;
 
         $pembayaran->save();
+
+        $pendaftaran = Pendaftaran::find($request->pendaftaran_id);
+        if ($pendaftaran) {
+            $pendaftaran->status = $request->status ?? 'pending';
+            $pendaftaran->save();
+        }
 
         return $pembayaran;
     }

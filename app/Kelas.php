@@ -30,6 +30,12 @@ class Kelas extends Model
         return $this->belongsTo(Program::class, 'program_kursus_id');
     }
 
+    public function peserta()
+    {
+        return $this->belongsToMany(Peserta::class, 'pendaftaran', 'kelas_kursus_id', 'peserta_id')
+                    ->withTimestamps();
+    }
+
     public function list($request): LengthAwarePaginator
     {
         $kelas = $this->whereNull('deleted_at');

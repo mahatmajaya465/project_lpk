@@ -124,7 +124,11 @@
                       />
                     </div>
                   </div>
-                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
+                  <div
+                    class="col-md-6 col-12"
+                    v-if="pembayaran.pendaftaran_id"
+                    style="display: none"
+                  >
                     <div class="form-group mb-3">
                       <label for="last-name-column">Status Pembayaran</label>
                       <select
@@ -133,10 +137,15 @@
                         id="status"
                         class="form-control"
                         required
+                        :readonly="user.roles == 'student'"
                       >
-                        <option value="pending">Pending</option>
-                        <option value="settlement">Settled</option>
-                        <option value="cancel">Cancelled</option>
+                        <option
+                          v-for="(item, index) in status_pembayaran"
+                          :key="index"
+                          :value="item.value"
+                        >
+                          {{ item.label }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -211,10 +220,23 @@ export default {
         status: "pending",
       },
       bukti_pembayaran: null,
+      user: this.$user,
+      status_pembayaran: [],
     };
   },
   mounted() {
     this.fetchPendaftaranData();
+    if (this.user.roles == "student") {
+      this.status_pembayaran = [{ value: "pending", label: "Pending" }];
+      this.pembayaran.status = "pending";
+    } else {
+      this.status_pembayaran = [
+        { value: "pending", label: "Pending" },
+        { value: "settlement", label: "Settled" },
+        { value: "cancel", label: "Cancelled" },
+        { value: "expire", label: "Expired" },
+      ];
+    }
   },
   methods: {
     fetchPendaftaranDetail() {

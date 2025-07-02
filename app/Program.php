@@ -20,6 +20,11 @@ class Program extends Model
         'status'
     ];
 
+     public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'program_kursus_id');
+    }
+
     public function list($request): LengthAwarePaginator
     {
         $program = $this->whereNull('deleted_at');

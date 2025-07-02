@@ -2178,29 +2178,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "IndexComponent",
-  components: {},
+  name: "DashboardComponent",
   data: function data() {
     return {
-      periode: null,
-      user: this.$user,
+      periode: new Date().toISOString().slice(0, 7),
+      // Default to current month (YYYY-MM)
       analysis: {
-        services_count: 0,
-        projects_count: 0,
-        testimonials_count: 0
-      }
+        peserta_aktif: 0,
+        kelas_aktif: 0,
+        pembayaran_diterima: 0,
+        gaji_instruktur: 0,
+        peserta_per_kelas: {
+          labels: [],
+          data: []
+        },
+        peserta_per_program: []
+      },
+      chart: null
     };
   },
-  created: function created() {
-    var _this = this;
+  mounted: function mounted() {
     this.fetchTransactionAnalysis();
-    Object(vue__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
-      _this.renderKelasChart();
-    });
   },
   methods: {
     fetchTransactionAnalysis: function fetchTransactionAnalysis() {
-      var _this2 = this;
+      var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -2211,27 +2213,33 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.next = 4;
               return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/analysis", {
                 params: {
-                  periode: _this2.periode
+                  periode: _this.periode
                 }
               });
             case 4:
               response = _context.sent;
-              _this2.analysis = response.data.data;
+              _this.analysis = response.data.data;
+              _this.renderKelasChart();
               Swal.close();
-              _context.next = 12;
+              _context.next = 13;
               break;
-            case 9:
-              _context.prev = 9;
+            case 10:
+              _context.prev = 10;
               _context.t0 = _context["catch"](1);
               AlertMsg(_context.t0.response.data.message, true);
-            case 12:
+            case 13:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 9]]);
+        }, _callee, null, [[1, 10]]);
       }))();
     },
     renderKelasChart: function renderKelasChart() {
+      var _this2 = this;
+      // Destroy previous chart if exists
+      if (this.chart) {
+        this.chart.destroy();
+      }
       var options = {
         chart: {
           type: "bar",
@@ -2245,46 +2253,57 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           fontFamily: "inherit",
           parentHeightOffset: 0
         },
-        stroke: {
-          width: 2,
-          lineCap: "round",
-          curve: "straight"
-        },
         series: [{
-          name: "Nilai",
-          data: [9, 10, 3] // Bahasa, IPA, IPS
+          name: "Jumlah Peserta",
+          data: this.analysis.peserta_per_kelas.data
         }],
-        labels: ["Bahasa", "IPA", "IPS"],
         xaxis: {
-          categories: ["Bahasa", "IPA", "IPS"],
-          tooltip: {
-            enabled: false
+          categories: this.analysis.peserta_per_kelas.labels
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: false
           }
         },
+        colors: ["#206bc4"],
         tooltip: {
-          theme: "dark"
+          y: {
+            formatter: function formatter(value) {
+              return "".concat(_this2.formatNumber(value), " orang");
+            }
+          }
         },
         grid: {
-          strokeDashArray: 4,
-          padding: {
-            top: -20,
-            right: 0,
-            left: -4,
-            bottom: -4
-          }
+          strokeDashArray: 4
         },
-        colors: ["color-mix(in srgb, transparent, var(--tblr-primary) 100%)"],
         yaxis: {
           labels: {
-            padding: 4
+            formatter: function formatter(value) {
+              return _this2.formatNumber(value);
+            }
           }
-        },
-        legend: {
-          show: false
         }
       };
-      var chart = new apexcharts__WEBPACK_IMPORTED_MODULE_2___default.a(this.$refs.kelasChart, options);
-      chart.render();
+      this.chart = new apexcharts__WEBPACK_IMPORTED_MODULE_2___default.a(this.$refs.kelasChart, options);
+      this.chart.render();
+    },
+    formatNumber: function formatNumber(value) {
+      return new Intl.NumberFormat("id-ID").format(value);
+    },
+    formatCurrency: function formatCurrency(value) {
+      // Format as currency but remove "Rp" prefix
+      var formatted = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+      }).format(value);
+      return formatted.replace(/^Rp\s?/, "").trim();
+    }
+  },
+  beforeUnmount: function beforeUnmount() {
+    if (this.chart) {
+      this.chart.destroy();
     }
   }
 });
@@ -3369,11 +3388,34 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         nominal: null,
         status: "pending"
       },
-      bukti_pembayaran: null
+      bukti_pembayaran: null,
+      user: this.$user,
+      status_pembayaran: []
     };
   },
   mounted: function mounted() {
     this.fetchPendaftaranData();
+    if (this.user.roles == "student") {
+      this.status_pembayaran = [{
+        value: "pending",
+        label: "Pending"
+      }];
+      this.pembayaran.status = "pending";
+    } else {
+      this.status_pembayaran = [{
+        value: "pending",
+        label: "Pending"
+      }, {
+        value: "settlement",
+        label: "Settled"
+      }, {
+        value: "cancel",
+        label: "Cancelled"
+      }, {
+        value: "expire",
+        label: "Expired"
+      }];
+    }
   },
   methods: {
     fetchPendaftaranDetail: function fetchPendaftaranDetail() {
@@ -3770,7 +3812,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       pendaftaran: {},
       pesertas: [],
       programs: [],
-      kelas: []
+      kelas: [],
+      user: this.$user
     };
   },
   mounted: function mounted() {
@@ -3797,17 +3840,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               response = _context.sent;
               data = response.data;
               _this.pesertas = data.data;
-              _context.next = 12;
+              if (_this.user.roles === "student") {
+                _this.pendaftaran.peserta_id = _this.pesertas.find(function (peserta) {
+                  return peserta.user_id == _this.user.id;
+                }).id;
+              }
+              _context.next = 13;
               break;
-            case 9:
-              _context.prev = 9;
+            case 10:
+              _context.prev = 10;
               _context.t0 = _context["catch"](1);
               AlertMsg(_context.t0.response.data.message, true);
-            case 12:
+            case 13:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 9]]);
+        }, _callee, null, [[1, 10]]);
       }))();
     },
     fetchKelasData: function fetchKelasData() {
@@ -4376,10 +4424,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
         }, _callee3, null, [[0, 8]]);
       }))();
-    },
-    changePeriode: function changePeriode(event) {
-      this.filter.periode = event.target.value;
-      this.fetchAllPenggajianData();
     }
   }
 });
@@ -5960,7 +6004,7 @@ var render = function render() {
       role: "dialog"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
@@ -6056,7 +6100,38 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", [_vm._m(0), _vm._v(" "), _c("div", {
+  return _c("div", [_c("div", {
+    staticClass: "page-header d-print-none"
+  }, [_c("div", {
+    staticClass: "container-xl"
+  }, [_c("div", {
+    staticClass: "row g-2 align-items-center"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "col-auto ms-auto"
+  }, [_c("div", {
+    staticClass: "input-group"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.periode,
+      expression: "periode"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "month"
+    },
+    domProps: {
+      value: _vm.periode
+    },
+    on: {
+      change: _vm.fetchTransactionAnalysis,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.periode = $event.target.value;
+      }
+    }
+  })])])])])]), _vm._v(" "), _c("div", {
     staticClass: "page-body"
   }, [_c("div", {
     staticClass: "container-xl"
@@ -6087,7 +6162,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Peserta Aktif")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.analysis.peserta_aktif) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.peserta_aktif)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -6108,7 +6183,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Kelas Aktif")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.analysis.kelas_aktif) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.kelas_aktif)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -6129,7 +6204,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Pembayaran Diterima")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.analysis.pembayaran_diterima) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.pembayaran_diterima)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -6150,7 +6225,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Gaji Instruktur")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.analysis.gaji_instruktur) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.gaji_instruktur)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-lg-6 col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -6166,28 +6241,7 @@ var render = function render() {
     attrs: {
       id: "kelas-chart"
     }
-  })])])]), _vm._v(" "), _vm._m(1)])])])])])]);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "page-header d-print-none"
-  }, [_c("div", {
-    staticClass: "container-xl"
-  }, [_c("div", {
-    staticClass: "row g-2 align-items-center"
-  }, [_c("div", {
-    staticClass: "col"
-  }, [_c("div", {
-    staticClass: "page-pretitle"
-  }, [_vm._v("Overview")]), _vm._v(" "), _c("h2", {
-    staticClass: "page-title"
-  }, [_vm._v("Dashboard")])])])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
+  })])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-lg-6 col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -6197,12 +6251,34 @@ var staticRenderFns = [function () {
     staticClass: "card-title"
   }, [_vm._v("Peserta dalam Program")]), _vm._v(" "), _c("div", {
     staticClass: "table-responsive"
-  }, [_c("table", {
-    staticClass: "table table-vcenter",
+  }, [_c("div", {
+    staticClass: "table-container",
     staticStyle: {
-      height: "240px"
+      "max-height": "240px",
+      "overflow-y": "auto"
     }
-  }, [_c("tbody", [_c("tr", [_c("td", [_c("h5", [_vm._v("Program 1")]), _vm._v(" "), _c("ul", [_c("li", [_vm._v("Kelas 1 : 2 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 2 : 4 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 3 : 5 orang")])])])]), _vm._v(" "), _c("tr", [_c("td", [_c("h5", [_vm._v("Program 1")]), _vm._v(" "), _c("ul", [_c("li", [_vm._v("Kelas 1 : 2 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 2 : 4 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 3 : 5 orang")])])])]), _vm._v(" "), _c("tr", [_c("td", [_c("h5", [_vm._v("Program 1")]), _vm._v(" "), _c("ul", [_c("li", [_vm._v("Kelas 1 : 2 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 2 : 4 orang")]), _vm._v(" "), _c("li", [_vm._v("Kelas 3 : 5 orang")])])])])])])])])])]);
+  }, [_c("table", {
+    staticClass: "table table-vcenter"
+  }, [_c("tbody", _vm._l(_vm.analysis.peserta_per_program, function (program) {
+    return _c("tr", {
+      key: program.nama_program
+    }, [_c("td", [_c("h5", [_vm._v(_vm._s(program.nama_program))]), _vm._v(" "), _c("ul", _vm._l(program.kelas, function (kelas) {
+      return _c("li", {
+        key: kelas.nama_kelas
+      }, [_vm._v("\n                                  " + _vm._s(kelas.nama_kelas) + " :\n                                  " + _vm._s(_vm.formatNumber(kelas.peserta_count)) + " orang\n                                ")]);
+    }), 0)])]);
+  }), 0)])])])])])])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col"
+  }, [_c("div", {
+    staticClass: "page-pretitle"
+  }, [_vm._v("Overview")]), _vm._v(" "), _c("h2", {
+    staticClass: "page-title"
+  }, [_vm._v("Dashboard")])]);
 }];
 render._withStripped = true;
 
@@ -9544,7 +9620,10 @@ var render = function render() {
       }
     }
   })])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
-    staticClass: "col-md-6 col-12"
+    staticClass: "col-md-6 col-12",
+    staticStyle: {
+      display: "none"
+    }
   }, [_c("div", {
     staticClass: "form-group mb-3"
   }, [_c("label", {
@@ -9562,7 +9641,8 @@ var render = function render() {
     attrs: {
       name: "status",
       id: "status",
-      required: ""
+      required: "",
+      readonly: _vm.user.roles == "student"
     },
     on: {
       change: function change($event) {
@@ -9575,19 +9655,14 @@ var render = function render() {
         _vm.$set(_vm.pembayaran, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
-  }, [_c("option", {
-    attrs: {
-      value: "pending"
-    }
-  }, [_vm._v("Pending")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "settlement"
-    }
-  }, [_vm._v("Settled")]), _vm._v(" "), _c("option", {
-    attrs: {
-      value: "cancel"
-    }
-  }, [_vm._v("Cancelled")])])])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
+  }, _vm._l(_vm.status_pembayaran, function (item, index) {
+    return _c("option", {
+      key: index,
+      domProps: {
+        value: item.value
+      }
+    }, [_vm._v("\n                        " + _vm._s(item.label) + "\n                      ")]);
+  }), 0)])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -10399,6 +10474,7 @@ var render = function render() {
     attrs: {
       name: "peserta_id",
       id: "peserta_id",
+      readonly: _vm.user.roles == "student",
       required: ""
     },
     on: {
@@ -11138,7 +11214,7 @@ var render = function render() {
     on: {
       submit: function submit($event) {
         $event.preventDefault();
-        return _vm.fetchInstrukturData.apply(null, arguments);
+        return _vm.fetchAllPenggajianData.apply(null, arguments);
       }
     }
   }, [_c("div", {
@@ -11158,7 +11234,6 @@ var render = function render() {
       value: _vm.filter.periode
     },
     on: {
-      change: _vm.changePeriode,
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.$set(_vm.filter, "periode", $event.target.value);
@@ -13637,6 +13712,14 @@ var render = function render() {
     }
   }, [_vm._v("Peserta")]), _vm._v(" "), _c("option", {
     attrs: {
+      value: "instruktur"
+    }
+  }, [_vm._v("Instruktur")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "pimpinan"
+    }
+  }, [_vm._v("Pimpinan")]), _vm._v(" "), _c("option", {
+    attrs: {
       value: "super_admin"
     }
   }, [_vm._v("Super Admin")])])])]), _vm._v(" "), _c("div", {
@@ -13987,6 +14070,14 @@ var render = function render() {
       value: "student"
     }
   }, [_vm._v("Peserta")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "instruktur"
+    }
+  }, [_vm._v("Instruktur")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "pimpinan"
+    }
+  }, [_vm._v("Pimpinan")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "super_admin"
     }

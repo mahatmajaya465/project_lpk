@@ -4,9 +4,18 @@
       <div class="container-xl">
         <div class="row g-2 align-items-center">
           <div class="col">
-            <!-- Page pre-title -->
             <div class="page-pretitle">Overview</div>
             <h2 class="page-title">Dashboard</h2>
+          </div>
+          <div class="col-auto ms-auto">
+            <div class="input-group">
+              <input
+                type="month"
+                class="form-control"
+                v-model="periode"
+                @change="fetchTransactionAnalysis"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -16,6 +25,7 @@
         <section class="row">
           <div class="col-12 col-lg-12">
             <div class="row">
+              <!-- Stats Cards -->
               <div class="col-12 col-lg-3 col-md-12">
                 <router-link
                   class="text-decoration-none"
@@ -29,7 +39,7 @@
                       <h3 class="card-title">Peserta Aktif</h3>
                       <div>
                         <h5 class="font-extrabold mb-0">
-                          {{ analysis.peserta_aktif }}
+                          {{ formatNumber(analysis.peserta_aktif) }}
                         </h5>
                       </div>
                     </div>
@@ -49,7 +59,7 @@
                       <h3 class="card-title">Kelas Aktif</h3>
                       <div>
                         <h5 class="font-extrabold mb-0">
-                          {{ analysis.kelas_aktif }}
+                          {{ formatNumber(analysis.kelas_aktif) }}
                         </h5>
                       </div>
                     </div>
@@ -69,7 +79,7 @@
                       <h3 class="card-title">Pembayaran Diterima</h3>
                       <div>
                         <h5 class="font-extrabold mb-0">
-                          {{ analysis.pembayaran_diterima }}
+                          {{ formatCurrency(analysis.pembayaran_diterima) }}
                         </h5>
                       </div>
                     </div>
@@ -89,13 +99,15 @@
                       <h3 class="card-title">Gaji Instruktur</h3>
                       <div>
                         <h5 class="font-extrabold mb-0">
-                          {{ analysis.gaji_instruktur }}
+                          {{ formatCurrency(analysis.gaji_instruktur) }}
                         </h5>
                       </div>
                     </div>
                   </div>
                 </router-link>
               </div>
+
+              <!-- Charts -->
               <div class="col-12 col-lg-6 col-md-12">
                 <div class="card">
                   <div class="card-body">
@@ -108,45 +120,39 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Program Table -->
               <div class="col-12 col-lg-6 col-md-12">
                 <div class="card">
                   <div class="card-body">
                     <h3 class="card-title">Peserta dalam Program</h3>
                     <div class="table-responsive">
-                      <table class="table table-vcenter" style="height: 240px">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <h5>Program 1</h5>
-                              <ul>
-                                <li>Kelas 1 : 2 orang</li>
-                                <li>Kelas 2 : 4 orang</li>
-                                <li>Kelas 3 : 5 orang</li>
-                              </ul>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <h5>Program 1</h5>
-                              <ul>
-                                <li>Kelas 1 : 2 orang</li>
-                                <li>Kelas 2 : 4 orang</li>
-                                <li>Kelas 3 : 5 orang</li>
-                              </ul>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <h5>Program 1</h5>
-                              <ul>
-                                <li>Kelas 1 : 2 orang</li>
-                                <li>Kelas 2 : 4 orang</li>
-                                <li>Kelas 3 : 5 orang</li>
-                              </ul>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      <div
+                        class="table-container"
+                        style="max-height: 240px; overflow-y: auto"
+                      >
+                        <table class="table table-vcenter">
+                          <tbody>
+                            <tr
+                              v-for="program in analysis.peserta_per_program"
+                              :key="program.nama_program"
+                            >
+                              <td>
+                                <h5>{{ program.nama_program }}</h5>
+                                <ul>
+                                  <li
+                                    v-for="kelas in program.kelas"
+                                    :key="kelas.nama_kelas"
+                                  >
+                                    {{ kelas.nama_kelas }} :
+                                    {{ formatNumber(kelas.peserta_count) }} orang
+                                  </li>
+                                </ul>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -165,26 +171,27 @@ import { nextTick } from "vue";
 import ApexCharts from "apexcharts";
 
 export default {
-  name: "IndexComponent",
-  components: {},
+  name: "DashboardComponent",
   data() {
     return {
-      periode: null,
-      user: this.$user,
+      periode: new Date().toISOString().slice(0, 7), // Default to current month (YYYY-MM)
       analysis: {
-        services_count: 0,
-        projects_count: 0,
-        testimonials_count: 0,
+        peserta_aktif: 0,
+        kelas_aktif: 0,
+        pembayaran_diterima: 0,
+        gaji_instruktur: 0,
+        peserta_per_kelas: {
+          labels: [],
+          data: [],
+        },
+        peserta_per_program: [],
       },
+      chart: null,
     };
   },
-  created() {
+  mounted() {
     this.fetchTransactionAnalysis();
-    nextTick(() => {
-      this.renderKelasChart();
-    });
   },
-
   methods: {
     async fetchTransactionAnalysis() {
       Loading();
@@ -196,12 +203,18 @@ export default {
         });
 
         this.analysis = response.data.data;
+        this.renderKelasChart();
         Swal.close();
       } catch (error) {
         AlertMsg(error.response.data.message, true);
       }
     },
     renderKelasChart() {
+      // Destroy previous chart if exists
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
       const options = {
         chart: {
           type: "bar",
@@ -211,46 +224,57 @@ export default {
           fontFamily: "inherit",
           parentHeightOffset: 0,
         },
-        stroke: {
-          width: 2,
-          lineCap: "round",
-          curve: "straight",
-        },
         series: [
           {
-            name: "Nilai",
-            data: [9, 10, 3], // Bahasa, IPA, IPS
+            name: "Jumlah Peserta",
+            data: this.analysis.peserta_per_kelas.data,
           },
         ],
-        labels: ["Bahasa", "IPA", "IPS"],
         xaxis: {
-          categories: ["Bahasa", "IPA", "IPS"],
-          tooltip: { enabled: false },
+          categories: this.analysis.peserta_per_kelas.labels,
         },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: false,
+          },
+        },
+        colors: ["#206bc4"],
         tooltip: {
-          theme: "dark",
+          y: {
+            formatter: (value) => `${this.formatNumber(value)} orang`,
+          },
         },
         grid: {
           strokeDashArray: 4,
-          padding: {
-            top: -20,
-            right: 0,
-            left: -4,
-            bottom: -4,
-          },
         },
-        colors: ["color-mix(in srgb, transparent, var(--tblr-primary) 100%)"],
         yaxis: {
-          labels: { padding: 4 },
-        },
-        legend: {
-          show: false,
+          labels: {
+            formatter: (value) => this.formatNumber(value),
+          },
         },
       };
 
-      const chart = new ApexCharts(this.$refs.kelasChart, options);
-      chart.render();
+      this.chart = new ApexCharts(this.$refs.kelasChart, options);
+      this.chart.render();
     },
+    formatNumber(value) {
+      return new Intl.NumberFormat("id-ID").format(value);
+    },
+    formatCurrency(value) {
+      // Format as currency but remove "Rp" prefix
+      const formatted = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(value);
+      return formatted.replace(/^Rp\s?/, "").trim();
+    },
+  },
+  beforeUnmount() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
   },
 };
 </script>

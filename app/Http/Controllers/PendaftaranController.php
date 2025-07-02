@@ -56,14 +56,6 @@ class PendaftaranController extends Controller
     public function find($id)
     {
         try {
-            $auth = auth()->user();
-
-            if (!(in_array($auth->roles, ['super_admin']))) {
-                if ($id != $auth->id) {
-                    abort(500);
-                }
-            }
-
             $pendaftaran = Pendaftaran::find($id);
 
             if (!$pendaftaran) {

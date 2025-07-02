@@ -24,12 +24,18 @@ class Peserta extends Model
 
     public function list($request): LengthAwarePaginator
     {
+        $auth = auth()->user();
+
         $peserta = $this->with('user')
             ->whereHas('user', function ($query) {
                 $query->where('roles', 'student');
             });
 
         $peserta = $peserta->whereNull('deleted_at');
+
+        if($auth->roles == 'student') {
+            $peserta = $peserta->where('user_id', $auth->id);
+        }
 
         $search = $request->search;
 

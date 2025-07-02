@@ -52,6 +52,8 @@
                         class="form-control"
                       >
                         <option value="student">Peserta</option>
+                        <option value="instruktur">Instruktur</option>
+                        <option value="pimpinan">Pimpinan</option>
                         <option value="super_admin">Super Admin</option>
                       </select>
                     </div>
