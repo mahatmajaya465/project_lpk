@@ -376,69 +376,73 @@
                                 </span>
                             </router-link>
                         </li>
+
+                        @if (in_array(auth()->user()->roles, ['instruktur', 'super_admin']))
+                            <li
+                                :class="{
+                                    'nav-item': true,
+                                    'active': ['admin.penilaian.index'].includes($route.name)
+                                }">
+                                <router-link
+                                    :class="{
+                                        'nav-link': true,
+                                        'active': ['admin.penilaian.index'].includes($route.name)
+                                    }"
+                                    :to="{
+                                        name: 'admin.penilaian.index'
+                                    }">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-stars">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M17.8 19.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z" />
+                                            <path
+                                                d="M6.2 19.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z" />
+                                            <path
+                                                d="M12 9.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Penilaian
+                                    </span>
+                                </router-link>
+                            </li>
+                        @endif
                         
+                        @if (in_array(auth()->user()->roles, ['student', 'super_admin']))
+                            <li
+                                :class="{
+                                    'nav-item': true,
+                                    'active': ['admin.sertifikat.index'].includes($route.name)
+                                }">
+                                <router-link
+                                    :class="{
+                                        'nav-link': true,
+                                        'active': ['admin.sertifikat.index'].includes($route.name)
+                                    }"
+                                    :to="{
+                                        name: 'admin.sertifikat.index'
+                                    }">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-certificate"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5" /><path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73" /><path d="M6 9l12 0" /><path d="M6 12l3 0" /><path d="M6 15l2 0" /></svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Sertifikat
+                                    </span>
+                                </router-link>
+                            </li>
+                        @endif
+
                         @if (!in_array(auth()->user()->roles, ['instruktur']))
                             <li
-                            :class="{
-                                'nav-item dropdown': true,
-                                'active': [
-                                        'admin.pendaftaran.index',
-                                        'admin.pendaftaran.create',
-                                        'admin.pendaftaran.edit',
-                                        'admin.pembayaran.index',
-                                        'admin.pembayaran.create',
-                                        'admin.pembayaran.edit',
-                                        'admin.penggajian.index',
-                                        'admin.penggajian.create',
-                                        'admin.penggajian.edit'
-                                    ]
-                                    .includes($route.name)
-                            }">
-                            <a :class="{
-                                'nav-link dropdown-toggle': true,
-                                'active': [
-                                        'admin.pendaftaran.index',
-                                        'admin.pendaftaran.create',
-                                        'admin.pendaftaran.edit',
-                                        'admin.pembayaran.index',
-                                        'admin.pembayaran.create',
-                                        'admin.pembayaran.edit',
-                                        'admin.penggajian.index',
-                                        'admin.penggajian.create',
-                                        'admin.penggajian.edit'
-                                    ]
-                                    .includes($route.name)
-                            }"
-                                href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
-                                role="button" aria-expanded="true">
-                                <span
-                                    class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-cash-register">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5" />
-                                        <path d="M19 21v1m0 -8v1" />
-                                        <path
-                                            d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2" />
-                                        <path
-                                            d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1" />
-                                        <path d="M8 14v.01" />
-                                        <path d="M8 17v.01" />
-                                        <path d="M12 13.99v.01" />
-                                        <path d="M12 17v.01" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title">
-                                    Transaksi
-                                </span>
-                            </a>
-                            <div
                                 :class="{
-                                    'dropdown-menu': true,
-                                    'show': [
+                                    'nav-item dropdown': true,
+                                    'active': [
                                             'admin.pendaftaran.index',
                                             'admin.pendaftaran.create',
                                             'admin.pendaftaran.edit',
@@ -451,46 +455,111 @@
                                         ]
                                         .includes($route.name)
                                 }">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.pendaftaran.index'
-                                            }">
-                                            Pendaftaran
-                                        </router-link>
-                                        <router-link class="dropdown-item"
-                                            :to="{
-                                                name: 'admin.pembayaran.index'
-                                            }">
-                                            Pembayaran
-                                        </router-link>
-
-                                        @if (in_array(auth()->user()->roles, ['super_admin']))
+                                <a :class="{
+                                    'nav-link dropdown-toggle': true,
+                                    'active': [
+                                            'admin.pendaftaran.index',
+                                            'admin.pendaftaran.create',
+                                            'admin.pendaftaran.edit',
+                                            'admin.pembayaran.index',
+                                            'admin.pembayaran.create',
+                                            'admin.pembayaran.edit',
+                                            'admin.penggajian.index',
+                                            'admin.penggajian.create',
+                                            'admin.penggajian.edit'
+                                        ]
+                                        .includes($route.name)
+                                }"
+                                    href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
+                                    role="button" aria-expanded="true">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-cash-register">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5" />
+                                            <path d="M19 21v1m0 -8v1" />
+                                            <path
+                                                d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2" />
+                                            <path
+                                                d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1" />
+                                            <path d="M8 14v.01" />
+                                            <path d="M8 17v.01" />
+                                            <path d="M12 13.99v.01" />
+                                            <path d="M12 17v.01" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Transaksi
+                                    </span>
+                                </a>
+                                <div
+                                    :class="{
+                                        'dropdown-menu': true,
+                                        'show': [
+                                                'admin.pendaftaran.index',
+                                                'admin.pendaftaran.create',
+                                                'admin.pendaftaran.edit',
+                                                'admin.pembayaran.index',
+                                                'admin.pembayaran.create',
+                                                'admin.pembayaran.edit',
+                                                'admin.penggajian.index',
+                                                'admin.penggajian.create',
+                                                'admin.penggajian.edit'
+                                            ]
+                                            .includes($route.name)
+                                    }">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
                                             <router-link class="dropdown-item"
                                                 :to="{
-                                                    name: 'admin.penggajian.index'
+                                                    name: 'admin.pendaftaran.index'
                                                 }">
-                                                Penggajian
+                                                Pendaftaran
                                             </router-link>
-                                        @endif
+                                            <router-link class="dropdown-item"
+                                                :to="{
+                                                    name: 'admin.pembayaran.index'
+                                                }">
+                                                Pembayaran
+                                            </router-link>
+
+                                            @if (in_array(auth()->user()->roles, ['super_admin']))
+                                                <router-link class="dropdown-item"
+                                                    :to="{
+                                                        name: 'admin.penggajian.index'
+                                                    }">
+                                                    Penggajian
+                                                </router-link>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
                         @endif
 
                         @if (in_array(auth()->user()->roles, ['super_admin', 'pimpinan']))
                             <li
                                 :class="{
                                     'nav-item dropdown': true,
-                                    'active': ['admin.company_information.index', 'admin.users.index']
-                                        .includes($route.name)
+                                    'active': [
+                                        'admin.laporan_pendaftaran.index',
+                                        'admin.laporan_kelas.index',
+                                        'admin.laporan_pembayaran.index',
+                                        'admin.laporan_penggajian.index'
+                                    ].includes($route.name)
                                 }">
                                 <a :class="{
                                     'nav-link dropdown-toggle': true,
-                                    'active': ['admin.company_information.index', 'admin.users.index']
-                                        .includes($route.name)
+                                    'active': [
+                                        'admin.laporan_pendaftaran.index',
+                                        'admin.laporan_kelas.index',
+                                        'admin.laporan_pembayaran.index',
+                                        'admin.laporan_penggajian.index'
+                                    ].includes($route.name)
                                 }"
                                     href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false"
                                     role="button" aria-expanded="true">
@@ -516,8 +585,12 @@
                                 <div
                                     :class="{
                                         'dropdown-menu': true,
-                                        'show': ['admin.company_information.index', 'admin.users.index']
-                                            .includes($route.name)
+                                        'show': [
+                                            'admin.laporan_pendaftaran.index',
+                                            'admin.laporan_kelas.index',
+                                            'admin.laporan_pembayaran.index',
+                                            'admin.laporan_penggajian.index'
+                                        ].includes($route.name)
                                     }">
                                     <div class="dropdown-menu-columns">
                                         <div class="dropdown-menu-column">

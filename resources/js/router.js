@@ -45,6 +45,9 @@ import IndexPenjadwalanComponent from './components/admin/penjadwalan/IndexCompo
 // absensi page components
 import IndexAbsensiComponent from './components/admin/absensi/IndexComponent.vue';
 
+// penilaian page components
+import IndexPenilaianComponent from './components/admin/penilaian/IndexComponent.vue';
+
 // pembayaran page component
 import IndexPembayaranComponent from './components/admin/pembayaran/IndexComponent.vue';
 import CreatePembayaranComponent from './components/admin/pembayaran/CreateComponent.vue';
@@ -203,6 +206,14 @@ const routes = [
     component: IndexAbsensiComponent,
     name: "admin.absensi.index",
     meta: { title: 'Absensi', middleware: [staffMiddleware, storeUserMiddleware] }
+  },
+  
+  // IndexPenilaianComponent page
+  {
+    path: '/v1/admin/penilaian',
+    component: IndexPenilaianComponent,
+    name: "admin.penilaian.index",
+    meta: { title: 'Penilaian', middleware: [staffMiddleware, storeUserMiddleware] }
   },
 
   // materi page

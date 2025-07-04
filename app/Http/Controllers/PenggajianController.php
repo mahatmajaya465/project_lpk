@@ -18,12 +18,11 @@ class PenggajianController extends Controller
         $periode = date('Y-m', strtotime($periode));
 
         $instruktur = Instruktur::with('user')->find($request->instruktur_id);
-
+       
         if (!$instruktur) {
             return response()->json(['message' => 'Instruktur tidak ditemukan'], 404);
         }
 
-        $instruktur = new Instruktur();
         $data = $instruktur->getGajiInstruktur($instruktur, $periode);
 
         return response()->json([

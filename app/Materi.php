@@ -34,6 +34,11 @@ class Materi extends Model
             });
         }
 
+        if($request->kelas_id){
+            $jadwal = Jadwal::where('kelas_kursus_id', $request->kelas_id)->get()->pluck('materi_id');
+            $materi = $materi->whereIn('id', $jadwal);
+        }
+
         return $materi->paginate(100);
     }
 

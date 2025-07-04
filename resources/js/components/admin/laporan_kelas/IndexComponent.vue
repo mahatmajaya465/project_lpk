@@ -10,11 +10,11 @@
           </div>
           <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
-              <router-link
-                :to="{ name: 'admin.kelas.create' }"
+              <a
+                href="#"
+                @click.prevent="printReport"
                 class="btn btn-primary d-none d-sm-inline-block"
               >
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -36,8 +36,8 @@
                     d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
                   />
                 </svg>
-                Cetak Laporan</router-link
-              >
+                Cetak Laporan
+              </a>
             </div>
           </div>
         </div>
@@ -165,6 +165,85 @@ export default {
   },
   methods: {
     truncateText,
+    printReport() {
+      // Buat window baru
+      const printWindow = window.open("", "_blank");
+
+      // Ambil HTML yang ingin dicetak
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Laporan Kelas</title>
+          <style>
+            body { font-family: Arial, sans-serif; }
+            .report-header { text-align: center; margin-bottom: 20px; }
+            .report-title { font-size: 18px; font-weight: bold; }
+            .report-period { font-size: 14px; margin-bottom: 10px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+            .text-center { text-align: center; }
+            .page-break { page-break-after: always; }
+          </style>
+        </head>
+        <body>
+          <div class="report-header">
+            <div class="report-title">LAPORAN KELAS</div>
+            ${
+              this.filter.periode
+                ? `<div class="report-period">Periode: ${this.filter.periode}</div>`
+                : ""
+            }
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Kode</th>
+                <th>Nama</th>
+                <th>Program</th>
+                <th>Tgl. Mulai</th>
+                <th>Tgl. Selesai</th>
+                <th>Jml. Peserta</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.kelas
+                .map(
+                  (kela, index) => `
+                <tr>
+                  <td class="text-center">${index + 1}</td>
+                  <td>${kela.kode_kelas}</td>
+                  <td>${kela.nama_kelas}</td>
+                  <td>${kela.program.nama_program}</td>
+                  <td>${kela.tgl_mulai_indo}</td>
+                  <td>${kela.tgl_selesai_indo}</td>
+                  <td class="text-center">${kela.jumlah_peserta} orang</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(() => {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     async fetchKelasData() {
       try {
         Loading();

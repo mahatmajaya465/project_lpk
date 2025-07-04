@@ -26,7 +26,6 @@
                         name="pendaftaran_id"
                         id="pendaftaran_id"
                         class="form-control"
-                        required
                         @change="fetchPendaftaranDetail"
                       >
                         <option

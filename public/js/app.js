@@ -2014,7 +2014,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         longitude: "",
         lokasi: "",
         type: "clock_in" // Default type for absensi
-      }
+      },
+      user: this.$user
     };
   },
   created: function created() {
@@ -3089,6 +3090,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   methods: {
     truncateText: _utils_truncateText__WEBPACK_IMPORTED_MODULE_1__["truncateText"],
+    printReport: function printReport() {
+      // Buat window baru
+      var printWindow = window.open("", "_blank");
+
+      // Ambil HTML yang ingin dicetak
+      var printContent = "\n        <!DOCTYPE html>\n        <html>\n        <head>\n          <title>Laporan Kelas</title>\n          <style>\n            body { font-family: Arial, sans-serif; }\n            .report-header { text-align: center; margin-bottom: 20px; }\n            .report-title { font-size: 18px; font-weight: bold; }\n            .report-period { font-size: 14px; margin-bottom: 10px; }\n            table { width: 100%; border-collapse: collapse; }\n            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n            th { background-color: #f2f2f2; font-weight: bold; }\n            .text-center { text-align: center; }\n            .page-break { page-break-after: always; }\n          </style>\n        </head>\n        <body>\n          <div class=\"report-header\">\n            <div class=\"report-title\">LAPORAN KELAS</div>\n            ".concat(this.filter.periode ? "<div class=\"report-period\">Periode: ".concat(this.filter.periode, "</div>") : "", "\n          </div>\n\n          <table>\n            <thead>\n              <tr>\n                <th>No</th>\n                <th>Kode</th>\n                <th>Nama</th>\n                <th>Program</th>\n                <th>Tgl. Mulai</th>\n                <th>Tgl. Selesai</th>\n                <th>Jml. Peserta</th>\n              </tr>\n            </thead>\n            <tbody>\n              ").concat(this.kelas.map(function (kela, index) {
+        return "\n                <tr>\n                  <td class=\"text-center\">".concat(index + 1, "</td>\n                  <td>").concat(kela.kode_kelas, "</td>\n                  <td>").concat(kela.nama_kelas, "</td>\n                  <td>").concat(kela.program.nama_program, "</td>\n                  <td>").concat(kela.tgl_mulai_indo, "</td>\n                  <td>").concat(kela.tgl_selesai_indo, "</td>\n                  <td class=\"text-center\">").concat(kela.jumlah_peserta, " orang</td>\n                </tr>\n              ");
+      }).join(""), "\n            </tbody>\n          </table>\n        </body>\n        </html>\n      ");
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(function () {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     fetchKelasData: function fetchKelasData() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -3185,7 +3208,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       meta: {},
       filter: {
         search: "",
-        periode: ""
+        periode: "",
+        status: "settlement"
       }
     };
   },
@@ -3194,9 +3218,41 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   computed: {},
   methods: {
+    printReport: function printReport() {
+      var _this = this;
+      // Buat window baru
+      var printWindow = window.open("", "_blank");
+
+      // Format nominal untuk print
+      var formatNominal = function formatNominal(nominal) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0
+        }).format(nominal).replace("Rp", "Rp ");
+      };
+
+      // Ambil HTML yang ingin dicetak
+      var printContent = "\n        <!DOCTYPE html>\n        <html>\n        <head>\n          <title>Laporan Pembayaran</title>\n          <style>\n            body { font-family: Arial, sans-serif; margin: 20px; }\n            .report-header { text-align: center; margin-bottom: 20px; }\n            .report-title { font-size: 18px; font-weight: bold; }\n            .report-period { font-size: 14px; margin-bottom: 10px; }\n            table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n            th { background-color: #f2f2f2; font-weight: bold; }\n            .text-center { text-align: center; }\n            .text-right { text-align: right; }\n            .page-break { page-break-after: always; }\n            .footer { margin-top: 20px; display: flex; justify-content: space-between; }\n          </style>\n        </head>\n        <body>\n          <div class=\"report-header\">\n            <div class=\"report-title\">LAPORAN PEMBAYARAN</div>\n            ".concat(this.filter.periode ? "<div class=\"report-period\">Periode: ".concat(this.filter.periode, "</div>") : "", "\n          </div>\n          \n          <table>\n            <thead>\n              <tr>\n                <th class=\"text-center\">No</th>\n                <th>Kode</th>\n                <th>Tgl. Pembayaran</th>\n                <th>Nama Peserta</th>\n                <th>Kelas</th>\n                <th>Program</th>\n                <th class=\"text-right\">Nominal</th>\n                <th class=\"text-center\">Status</th>\n              </tr>\n            </thead>\n            <tbody>\n              ").concat(this.pembayarans.map(function (pembayaran, index) {
+        return "\n                <tr>\n                  <td class=\"text-center\">".concat(_this.meta.current_page * _this.meta.per_page - _this.meta.per_page + index + 1, "</td>\n                  <td>").concat(pembayaran.kode_pembayaran, "</td>\n                  <td>").concat(pembayaran.tgl_pembayaran, "</td>\n                  <td>").concat(pembayaran.pendaftaran.peserta.user.name, "</td>\n                  <td>").concat(pembayaran.pendaftaran.kelas.nama_kelas, "</td>\n                  <td>").concat(pembayaran.pendaftaran.program.nama_program, "</td>\n                  <td class=\"text-right\">").concat(formatNominal(pembayaran.nominal), "</td>\n                  <td class=\"text-center\">").concat(pembayaran.status_strtoupper, "</td>\n                </tr>\n              ");
+      }).join(""), "\n            </tbody>\n          </table>\n          \n          <div class=\"footer\">\n            <div>Total Data: ").concat(this.meta.total, "</div>\n            <div>Dicetak pada: ").concat(new Date().toLocaleString(), "</div>\n          </div>\n        </body>\n        </html>\n      ");
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(function () {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     fetchPembayaranData: function fetchPembayaranData() {
       var _arguments = arguments,
-        _this = this;
+        _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var page, response, data;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -3204,21 +3260,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
               Loading();
-              _this.meta.current_page = page;
+              _this2.meta.current_page = page;
               _context.prev = 3;
               _context.next = 6;
               return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/pembayaran/list", {
                 params: _objectSpread({
-                  page: _this.meta.current_page,
-                  per_page: _this.meta.per_page
-                }, _this.filter)
+                  page: _this2.meta.current_page,
+                  per_page: _this2.meta.per_page
+                }, _this2.filter)
               });
             case 6:
               response = _context.sent;
               data = response.data;
-              _this.pembayarans = data.data;
-              _this.links = data.links;
-              _this.meta = data.meta;
+              _this2.pembayarans = data.data;
+              _this2.links = data.links;
+              _this2.meta = data.meta;
               Swal.close();
               _context.next = 18;
               break;
@@ -3233,32 +3289,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
         }, _callee, null, [[3, 14]]);
       }))();
-    },
-    deletePembayaran: function deletePembayaran(id) {
-      var _this2 = this;
-      Swal.fire({
-        title: "Hapus data?",
-        text: "Data yang dihapus tidak dapat dipulihkan",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus!",
-        cancelButtonText: "Batal"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          Loading();
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/pembayaran/delete/" + id).then(function (response) {
-            var data = response.data;
-            AlertMsg(data.message, data.error);
-            if (!data.error) {
-              _this2.fetchPembayaranData(_this2.meta.current_page);
-            }
-          })["catch"](function (error) {
-            AlertMsg(error.response.data.message, true);
-          });
-        }
-      });
     }
   }
 });
@@ -3305,9 +3335,43 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   computed: {},
   methods: {
+    printReport: function printReport() {
+      var _this = this;
+      // Buat window baru
+      var printWindow = window.open("", "_blank");
+
+      // Format tanggal untuk print
+      var formatDate = function formatDate(dateString) {
+        if (!dateString) return "-";
+        var options = {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        };
+        return new Date(dateString).toLocaleDateString("id-ID", options);
+      };
+
+      // Ambil HTML yang ingin dicetak
+      var printContent = "\n        <!DOCTYPE html>\n        <html>\n        <head>\n          <title>Laporan Pendaftaran</title>\n          <style>\n            body { font-family: Arial, sans-serif; margin: 20px; }\n            .report-header { text-align: center; margin-bottom: 20px; }\n            .report-title { font-size: 18px; font-weight: bold; }\n            .report-period { font-size: 14px; margin-bottom: 10px; }\n            table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n            th { background-color: #f2f2f2; font-weight: bold; }\n            .text-center { text-align: center; }\n            .page-break { page-break-after: always; }\n            .footer { margin-top: 20px; display: flex; justify-content: space-between; }\n          </style>\n        </head>\n        <body>\n          <div class=\"report-header\">\n            <div class=\"report-title\">LAPORAN PENDAFTARAN</div>\n            ".concat(this.filter.periode ? "<div class=\"report-period\">Periode: ".concat(this.filter.periode, "</div>") : "", "\n          </div>\n          \n          <table>\n            <thead>\n              <tr>\n                <th class=\"text-center\">No</th>\n                <th>Kode Pendaftaran</th>\n                <th>Nama Peserta</th>\n                <th>Program</th>\n                <th>Kelas</th>\n              </tr>\n            </thead>\n            <tbody>\n              ").concat(this.pendaftarans.map(function (pendaftaran, index) {
+        return "\n                <tr>\n                  <td class=\"text-center\">".concat(_this.meta.current_page * _this.meta.per_page - _this.meta.per_page + index + 1, "</td>\n                  <td>").concat(pendaftaran.kode_pendaftaran, "</td>\n                  <td>").concat(pendaftaran.peserta.user.name, "</td>\n                  <td>").concat(pendaftaran.program.nama_program, "</td>\n                  <td>").concat(pendaftaran.kelas.nama_kelas, "</td>\n                </tr>\n              ");
+      }).join(""), "\n            </tbody>\n          </table>\n          \n          <div class=\"footer\">\n            <div>Total Data: ").concat(this.meta.total, "</div>\n            <div>Dicetak pada: ").concat(new Date().toLocaleString("id-ID"), "</div>\n          </div>\n        </body>\n        </html>\n      ");
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(function () {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     fetchPendaftaranData: function fetchPendaftaranData() {
       var _arguments = arguments,
-        _this = this;
+        _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var page, response, data;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -3315,21 +3379,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
               Loading();
-              _this.meta.current_page = page;
+              _this2.meta.current_page = page;
               _context.prev = 3;
               _context.next = 6;
               return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/pendaftaran/list", {
                 params: _objectSpread({
-                  page: _this.meta.current_page,
-                  per_page: _this.meta.per_page
-                }, _this.filter)
+                  page: _this2.meta.current_page,
+                  per_page: _this2.meta.per_page
+                }, _this2.filter)
               });
             case 6:
               response = _context.sent;
               data = response.data;
-              _this.pendaftarans = data.data;
-              _this.links = data.links;
-              _this.meta = data.meta;
+              _this2.pendaftarans = data.data;
+              _this2.links = data.links;
+              _this2.meta = data.meta;
               Swal.close();
               _context.next = 18;
               break;
@@ -3371,6 +3435,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3396,6 +3466,47 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   methods: {
     truncateText: _utils_truncateText__WEBPACK_IMPORTED_MODULE_1__["truncateText"],
+    printReport: function printReport() {
+      var _this = this;
+      // Buat window baru
+      var printWindow = window.open("", "_blank");
+
+      // Format periode untuk tampilan
+      var formatPeriode = function formatPeriode(periode) {
+        if (!periode) return "-";
+        var _periode$split = periode.split("-"),
+          _periode$split2 = _slicedToArray(_periode$split, 2),
+          year = _periode$split2[0],
+          month = _periode$split2[1];
+        var monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return "".concat(monthNames[parseInt(month) - 1], " ").concat(year);
+      };
+
+      // Hitung total gaji semua instruktur
+      var totalGaji = this.instrukturs.reduce(function (sum, instruktur) {
+        var _instruktur$penggajia;
+        return sum + (((_instruktur$penggajia = instruktur.penggajian) === null || _instruktur$penggajia === void 0 ? void 0 : _instruktur$penggajia.gaji) || 0);
+      }, 0);
+
+      // Ambil HTML yang ingin dicetak
+      var printContent = "\n        <!DOCTYPE html>\n        <html>\n        <head>\n          <title>Laporan Penggajian</title>\n          <style>\n            body { font-family: Arial, sans-serif; margin: 20px; }\n            .report-header { text-align: center; margin-bottom: 20px; }\n            .report-title { font-size: 18px; font-weight: bold; }\n            .report-period { font-size: 14px; margin-bottom: 10px; }\n            table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n            th { background-color: #f2f2f2; font-weight: bold; }\n            .text-center { text-align: center; }\n            .text-right { text-align: right; }\n            .page-break { page-break-after: always; }\n            .footer { margin-top: 20px; display: flex; justify-content: space-between; }\n            .total-row { font-weight: bold; background-color: #f8f9fa; }\n          </style>\n        </head>\n        <body>\n          <div class=\"report-header\">\n            <div class=\"report-title\">LAPORAN PENGAJIAN INSTRUKTUR</div>\n            ".concat(this.filter.periode ? "<div class=\"report-period\">Periode: ".concat(formatPeriode(this.filter.periode), "</div>") : "", "\n          </div>\n          \n          <table>\n            <thead>\n              <tr>\n                <th>No</th>\n                <th>Nama Instruktur</th>\n                <th>Periode</th>\n                <th class=\"text-right\">Total Jam Kerja</th>\n                <th class=\"text-right\">Gaji</th>\n              </tr>\n            </thead>\n            <tbody>\n              ").concat(this.instrukturs.map(function (instruktur, index) {
+        var _instruktur$penggajia2, _instruktur$penggajia3, _instruktur$penggajia4;
+        return "\n                <tr>\n                  <td class=\"text-center\">".concat(index + 1, "</td>\n                  <td>").concat(instruktur.user.name, "</td>\n                  <td>").concat(formatPeriode((_instruktur$penggajia2 = instruktur.penggajian) === null || _instruktur$penggajia2 === void 0 ? void 0 : _instruktur$penggajia2.periode), "</td>\n                  <td class=\"text-right\">").concat(((_instruktur$penggajia3 = instruktur.penggajian) === null || _instruktur$penggajia3 === void 0 ? void 0 : _instruktur$penggajia3.total_jam) || "0", " jam</td>\n                  <td class=\"text-right\">").concat(_this.formatCurrency(((_instruktur$penggajia4 = instruktur.penggajian) === null || _instruktur$penggajia4 === void 0 ? void 0 : _instruktur$penggajia4.gaji) || 0), "</td>\n                </tr>\n              ");
+      }).join(""), "\n              <tr class=\"total-row\">\n                <td colspan=\"4\" class=\"text-right\"><strong>TOTAL</strong></td>\n                <td class=\"text-right\"><strong>").concat(this.formatCurrency(totalGaji), "</strong></td>\n              </tr>\n            </tbody>\n          </table>\n          \n          <div class=\"footer\">\n            <div>Total Instruktur: ").concat(this.instrukturs.length, "</div>\n            <div>Dicetak pada: ").concat(new Date().toLocaleString("id-ID"), "</div>\n          </div>\n        </body>\n        </html>\n      ");
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(function () {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     formatCurrency: function formatCurrency(value) {
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -3405,7 +3516,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     fetchInstrukturData: function fetchInstrukturData() {
       var _arguments = arguments,
-        _this = this;
+        _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var page, response, data;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -3413,26 +3524,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
               Loading();
-              _this.meta.current_page = page;
+              _this2.meta.current_page = page;
               _context.prev = 3;
               _context.next = 6;
               return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/instruktur/list", {
                 params: {
-                  page: _this.meta.current_page,
-                  per_page: _this.meta.per_page,
-                  search: _this.filter.search
+                  page: _this2.meta.current_page,
+                  per_page: _this2.meta.per_page,
+                  search: _this2.filter.search
                 }
               });
             case 6:
               response = _context.sent;
               data = response.data;
-              _this.instrukturs = data.data;
-              _this.links = data.links;
-              _this.meta = data.meta;
+              _this2.instrukturs = data.data;
+              _this2.links = data.links;
+              _this2.meta = data.meta;
 
               // Fetch penggajian data for each instruktur
               _context.next = 13;
-              return _this.fetchAllPenggajianData();
+              return _this2.fetchAllPenggajianData();
             case 13:
               Swal.close();
               _context.next = 20;
@@ -3450,15 +3561,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     fetchAllPenggajianData: function fetchAllPenggajianData() {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var promises;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              promises = _this2.instrukturs.map(function (instruktur) {
-                return _this2.fetchPenggajianData(instruktur.id);
+              promises = _this3.instrukturs.map(function (instruktur) {
+                return _this3.fetchPenggajianData(instruktur.id);
               });
               _context2.next = 4;
               return Promise.all(promises);
@@ -3478,7 +3589,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     fetchPenggajianData: function fetchPenggajianData(instrukturId) {
-      var _this3 = this;
+      var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var response, instruktur;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
@@ -3487,17 +3598,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context3.prev = 0;
               _context3.next = 3;
               return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/penggajian/gajiInstruktur", {
-                params: _objectSpread(_objectSpread({}, _this3.filter), {}, {
+                params: _objectSpread(_objectSpread({}, _this4.filter), {}, {
                   instruktur_id: instrukturId
                 })
               });
             case 3:
               response = _context3.sent;
-              instruktur = _this3.instrukturs.find(function (i) {
+              instruktur = _this4.instrukturs.find(function (i) {
                 return i.id === instrukturId;
               });
               if (instruktur) {
-                _this3.$set(instruktur, "penggajian", {
+                _this4.$set(instruktur, "penggajian", {
                   periode: response.data.periode,
                   total_jam: response.data.total_jam,
                   gaji: response.data.gaji,
@@ -3505,13 +3616,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   absensi: response.data.complete_absensi
                 });
               }
-              _context3.next = 11;
+              _context3.next = 12;
               break;
             case 8:
               _context3.prev = 8;
               _context3.t0 = _context3["catch"](0);
               console.error("Error fetching penggajian for instruktur ".concat(instrukturId, ":"), _context3.t0);
-            case 11:
+              AlertMsg("Gagal memuat data penggajian untuk instruktur ".concat(instrukturId), true);
+            case 12:
             case "end":
               return _context3.stop();
           }
@@ -4892,17 +5004,311 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   absensi: response.data.complete_absensi
                 });
               }
-              _context3.next = 11;
+              _context3.next = 12;
               break;
             case 8:
               _context3.prev = 8;
               _context3.t0 = _context3["catch"](0);
               console.error("Error fetching penggajian for instruktur ".concat(instrukturId, ":"), _context3.t0);
-            case 11:
+              AlertMsg("Gagal memuat data penggajian untuk instruktur ".concat(instrukturId), true);
+            case 12:
             case "end":
               return _context3.stop();
           }
         }, _callee3, null, [[0, 8]]);
+      }))();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PenilaianIndexComponent",
+  data: function data() {
+    return {
+      penilaians: [],
+      programs: [],
+      kelases: [],
+      filteredKelases: [],
+      materis: [],
+      filter: {
+        program_id: "",
+        kelas_id: "",
+        materi_id: "",
+        search: ""
+      },
+      loading: false,
+      saving: false
+    };
+  },
+  created: function created() {
+    this.fetchProgramData();
+    this.fetchKelasData();
+  },
+  methods: {
+    fetchProgramData: function fetchProgramData() {
+      var _this = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/program/list");
+            case 3:
+              response = _context.sent;
+              _this.programs = response.data.data;
+              _context.next = 10;
+              break;
+            case 7:
+              _context.prev = 7;
+              _context.t0 = _context["catch"](0);
+              AlertMsg("Gagal memuat data program", true);
+            case 10:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 7]]);
+      }))();
+    },
+    fetchKelasData: function fetchKelasData() {
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/kelas/list");
+            case 3:
+              response = _context2.sent;
+              _this2.kelases = response.data.data;
+              _context2.next = 10;
+              break;
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](0);
+              AlertMsg("Gagal memuat data kelas", true);
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[0, 7]]);
+      }))();
+    },
+    fetchKelasByProgram: function fetchKelasByProgram() {
+      var _this3 = this;
+      if (!this.filter.program_id) {
+        this.filteredKelases = this.kelases;
+        this.filter.kelas_id = "";
+        this.filter.materi_id = "";
+        this.materis = [];
+        return;
+      }
+      this.filteredKelases = this.kelases.filter(function (kelas) {
+        return kelas.program.id == _this3.filter.program_id;
+      });
+      this.filter.kelas_id = "";
+      this.filter.materi_id = "";
+      this.materis = [];
+    },
+    fetchMateriByKelas: function fetchMateriByKelas() {
+      var _this4 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              if (_this4.filter.kelas_id) {
+                _context3.next = 4;
+                break;
+              }
+              _this4.filter.materi_id = "";
+              _this4.materis = [];
+              return _context3.abrupt("return");
+            case 4:
+              _context3.prev = 4;
+              _context3.next = 7;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/materi/list", {
+                params: {
+                  kelas_id: _this4.filter.kelas_id
+                }
+              });
+            case 7:
+              response = _context3.sent;
+              _this4.materis = response.data.data;
+              _context3.next = 14;
+              break;
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3["catch"](4);
+              AlertMsg("Gagal memuat data materi", true);
+            case 14:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[4, 11]]);
+      }))();
+    },
+    fetchPenilaianData: function fetchPenilaianData() {
+      var _arguments = arguments,
+        _this5 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var page, response, data;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+              _this5.loading = true;
+              _context4.prev = 2;
+              _context4.next = 5;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/v1/penilaian/list", {
+                params: _objectSpread({}, _this5.filter)
+              });
+            case 5:
+              response = _context4.sent;
+              data = response.data;
+              _this5.penilaians = data.map(function (p) {
+                return _objectSpread(_objectSpread({}, p), {}, {
+                  originalNilai: p.nilai // Simpan nilai original untuk comparison
+                });
+              });
+              _context4.next = 13;
+              break;
+            case 10:
+              _context4.prev = 10;
+              _context4.t0 = _context4["catch"](2);
+              AlertMsg("Gagal memuat data penilaian", true);
+            case 13:
+              _context4.prev = 13;
+              _this5.loading = false;
+              return _context4.finish(13);
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, null, [[2, 10, 13, 16]]);
+      }))();
+    },
+    validateNilai: function validateNilai(penilaian) {
+      if (penilaian.nilai < 0) penilaian.nilai = 0;
+      if (penilaian.nilai > 100) penilaian.nilai = 100;
+    },
+    savePenilaian: function savePenilaian(penilaian) {
+      var _this6 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              Loading();
+              if (!(penilaian.nilai === penilaian.originalNilai)) {
+                _context5.next = 3;
+                break;
+              }
+              return _context5.abrupt("return");
+            case 3:
+              _this6.saving = true;
+              _context5.prev = 4;
+              _context5.next = 7;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/penilaian/update/".concat(penilaian.id), {
+                nilai: penilaian.nilai
+              });
+            case 7:
+              penilaian.originalNilai = penilaian.nilai;
+              AlertMsg("Nilai berhasil disimpan");
+              _context5.next = 14;
+              break;
+            case 11:
+              _context5.prev = 11;
+              _context5.t0 = _context5["catch"](4);
+              AlertMsg("Gagal menyimpan nilai, silakan coba lagi", true);
+            case 14:
+              _context5.prev = 14;
+              _this6.saving = false;
+              Swal.close();
+              return _context5.finish(14);
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, null, [[4, 11, 14, 18]]);
+      }))();
+    },
+    saveAllPenilaian: function saveAllPenilaian() {
+      var _this7 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var changedPenilaians;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              Loading();
+              changedPenilaians = _this7.penilaians.filter(function (p) {
+                return p.nilai !== p.originalNilai;
+              });
+              if (changedPenilaians.length) {
+                _context6.next = 5;
+                break;
+              }
+              AlertMsg("Tidak ada perubahan nilai yang perlu disimpan", true);
+              return _context6.abrupt("return");
+            case 5:
+              _this7.saving = true;
+              _context6.prev = 6;
+              _context6.next = 9;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/penilaian/update-batch", {
+                penilaians: changedPenilaians.map(function (p) {
+                  return {
+                    id: p.id,
+                    nilai: p.nilai
+                  };
+                })
+              });
+            case 9:
+              // Update original values
+              changedPenilaians.forEach(function (p) {
+                p.originalNilai = p.nilai;
+              });
+              AlertMsg("Semua nilai berhasil disimpan");
+              _context6.next = 16;
+              break;
+            case 13:
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](6);
+              AlertMsg("Gagal menyimpan nilai, silakan coba lagi", true);
+            case 16:
+              _context6.prev = 16;
+              _this7.saving = false;
+              Swal.close();
+              return _context6.finish(16);
+            case 20:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, null, [[6, 13, 16, 20]]);
       }))();
     }
   }
@@ -6205,7 +6611,7 @@ var render = function render() {
       staticStyle: {
         "text-wrap": "nowrap"
       }
-    }, [_c("button", {
+    }, [_vm.user.roles != "super_admin" ? _c("button", {
       "class": {
         "btn btn-outline-primary": true,
         disabled: !jadwal.can_absen
@@ -6254,7 +6660,7 @@ var render = function render() {
       attrs: {
         d: "M12 11v4"
       }
-    })]), _vm._v("\n                            Absen\n                          ")]), _vm._v(" "), _c("button", {
+    })]), _vm._v("\n                            Absen\n                          ")]) : _vm._e(), _vm._v(" "), _c("button", {
       "class": {
         "btn btn-outline-info": true,
         disabled: !jadwal.can_absen
@@ -9006,11 +9412,15 @@ var render = function render() {
     staticClass: "col-auto ms-auto d-print-none"
   }, [_c("div", {
     staticClass: "btn-list"
-  }, [_c("router-link", {
+  }, [_c("a", {
     staticClass: "btn btn-primary d-none d-sm-inline-block",
     attrs: {
-      to: {
-        name: "admin.kelas.create"
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.printReport.apply(null, arguments);
       }
     }
   }, [_c("svg", {
@@ -9044,7 +9454,7 @@ var render = function render() {
     attrs: {
       d: "M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
     }
-  })]), _vm._v("\n              Cetak Laporan")])], 1)])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n              Cetak Laporan\n            ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "page-body"
   }, [_c("div", {
     staticClass: "container-xl"
@@ -9223,11 +9633,15 @@ var render = function render() {
     staticClass: "col-auto ms-auto d-print-none"
   }, [_c("div", {
     staticClass: "btn-list"
-  }, [_c("router-link", {
+  }, [_c("a", {
     staticClass: "btn btn-primary d-none d-sm-inline-block",
     attrs: {
-      to: {
-        name: "admin.pembayaran.create"
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.printReport.apply(null, arguments);
       }
     }
   }, [_c("svg", {
@@ -9261,7 +9675,7 @@ var render = function render() {
     attrs: {
       d: "M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
     }
-  })]), _vm._v("\n              Cetak Laporan")])], 1)])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n              Cetak Laporan\n            ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "page-body"
   }, [_c("div", {
     staticClass: "container-xl"
@@ -9345,7 +9759,7 @@ var render = function render() {
       staticStyle: {
         "text-wrap": "nowrap"
       }
-    }, [_vm._v(_vm._s(pembayaran.status_strtoupper))])]);
+    }, [_vm._v("\n                      " + _vm._s(pembayaran.status_strtoupper) + "\n                    ")])]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -9440,11 +9854,15 @@ var render = function render() {
     staticClass: "col-auto ms-auto d-print-none"
   }, [_c("div", {
     staticClass: "btn-list"
-  }, [_c("router-link", {
+  }, [_c("a", {
     staticClass: "btn btn-primary d-none d-sm-inline-block",
     attrs: {
-      to: {
-        name: "admin.pendaftaran.create"
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.printReport.apply(null, arguments);
       }
     }
   }, [_c("svg", {
@@ -9478,7 +9896,7 @@ var render = function render() {
     attrs: {
       d: "M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
     }
-  })]), _vm._v("\n              Cetak Laporan")])], 1)])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n              Cetak Laporan\n            ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "page-body"
   }, [_c("div", {
     staticClass: "container-xl"
@@ -9645,11 +10063,15 @@ var render = function render() {
     staticClass: "col-auto ms-auto d-print-none"
   }, [_c("div", {
     staticClass: "btn-list"
-  }, [_c("router-link", {
+  }, [_c("a", {
     staticClass: "btn btn-primary d-none d-sm-inline-block",
     attrs: {
-      to: {
-        name: "admin.pendaftaran.create"
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.printReport.apply(null, arguments);
       }
     }
   }, [_c("svg", {
@@ -9683,7 +10105,7 @@ var render = function render() {
     attrs: {
       d: "M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
     }
-  })]), _vm._v("\n              Cetak Laporan")])], 1)])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n              Cetak Laporan\n            ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "page-body"
   }, [_c("div", {
     staticClass: "container-xl"
@@ -11135,8 +11557,7 @@ var render = function render() {
     staticClass: "form-control",
     attrs: {
       name: "pendaftaran_id",
-      id: "pendaftaran_id",
-      required: ""
+      id: "pendaftaran_id"
     },
     on: {
       change: [function ($event) {
@@ -12673,6 +13094,263 @@ var staticRenderFns = [function () {
   return _c("thead", [_c("tr", {
     staticClass: "table-primary"
   }, [_c("th", [_vm._v("Instruktur")]), _vm._v(" "), _c("th", [_vm._v("Periode")]), _vm._v(" "), _c("th", [_vm._v("Total Jam kerja")]), _vm._v(" "), _c("th", [_vm._v("Gaji")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true":
+/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "page-header d-print-none"
+  }, [_c("div", {
+    staticClass: "container-xl"
+  }, [_c("div", {
+    staticClass: "row g-2 align-items-center"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "col-auto ms-auto d-print-none"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      disabled: !_vm.penilaians.length
+    },
+    on: {
+      click: _vm.saveAllPenilaian
+    }
+  }, [_vm._v("\n            Simpan Semua Nilai\n          ")])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "page-body"
+  }, [_c("div", {
+    staticClass: "container-xl"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "d-flex mb-3 gap-3 align-items-end flex-wrap"
+  }, [_c("div", {
+    staticClass: "flex-grow-1",
+    staticStyle: {
+      "min-width": "220px"
+    }
+  }, [_c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Program")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.program_id,
+      expression: "filter.program_id"
+    }],
+    staticClass: "form-select",
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "program_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.fetchKelasByProgram]
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Semua Program")]), _vm._v(" "), _vm._l(_vm.programs, function (program) {
+    return _c("option", {
+      key: program.id,
+      domProps: {
+        value: program.id
+      }
+    }, [_vm._v("\n                  " + _vm._s(program.nama_program) + "\n                ")]);
+  })], 2)]), _vm._v(" "), _c("div", {
+    staticClass: "flex-grow-1",
+    staticStyle: {
+      "min-width": "220px"
+    }
+  }, [_c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Kelas")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.kelas_id,
+      expression: "filter.kelas_id"
+    }],
+    staticClass: "form-select",
+    attrs: {
+      disabled: !_vm.filter.program_id
+    },
+    on: {
+      change: [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "kelas_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }, _vm.fetchMateriByKelas]
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Semua Kelas")]), _vm._v(" "), _vm._l(_vm.filteredKelases, function (kelas) {
+    return _c("option", {
+      key: kelas.id,
+      domProps: {
+        value: kelas.id
+      }
+    }, [_vm._v("\n                  " + _vm._s(kelas.nama_kelas) + "\n                ")]);
+  })], 2)]), _vm._v(" "), _c("div", {
+    staticClass: "flex-grow-1",
+    staticStyle: {
+      "min-width": "220px"
+    }
+  }, [_c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Materi")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.materi_id,
+      expression: "filter.materi_id"
+    }],
+    staticClass: "form-select",
+    attrs: {
+      disabled: !_vm.filter.kelas_id
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "materi_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Semua Materi")]), _vm._v(" "), _vm._l(_vm.materis, function (materi) {
+    return _c("option", {
+      key: materi.id,
+      domProps: {
+        value: materi.id
+      }
+    }, [_vm._v("\n                  " + _vm._s(materi.nama) + "\n                ")]);
+  })], 2)]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex align-items-end"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button",
+      disabled: _vm.loading
+    },
+    on: {
+      click: _vm.fetchPenilaianData
+    }
+  }, [_vm.loading ? _c("span", {
+    staticClass: "spinner-border spinner-border-sm"
+  }) : _vm._e(), _vm._v("\n                Tampilkan\n              ")])])]), _vm._v(" "), _vm.penilaians.length ? _c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-hover"
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.penilaians, function (penilaian, index) {
+    return _c("tr", {
+      key: penilaian.id
+    }, [_c("td", {
+      staticClass: "text-center"
+    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(penilaian.user.name))]), _vm._v(" "), _c("td", [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model.number",
+        value: penilaian.nilai,
+        expression: "penilaian.nilai",
+        modifiers: {
+          number: true
+        }
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "number",
+        min: "0",
+        max: "100"
+      },
+      domProps: {
+        value: penilaian.nilai
+      },
+      on: {
+        change: function change($event) {
+          return _vm.validateNilai(penilaian);
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(penilaian, "nilai", _vm._n($event.target.value));
+        },
+        blur: function blur($event) {
+          return _vm.$forceUpdate();
+        }
+      }
+    })])]);
+  }), 0)])]) : _c("div", {
+    staticClass: "text-center py-5"
+  }, [_vm._m(2), _vm._v(" "), _c("h5", {
+    staticClass: "text-muted"
+  }, [_vm._v("Tidak ada data penilaian")]), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v("Silakan pilih filter untuk menampilkan data")])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col"
+  }, [_c("div", {
+    staticClass: "page-pretitle"
+  }, [_vm._v("Overview")]), _vm._v(" "), _c("h2", {
+    staticClass: "page-title"
+  }, [_vm._v("Penilaian Peserta")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", {
+    staticClass: "table-light"
+  }, [_c("tr", [_c("th", {
+    attrs: {
+      width: "5%"
+    }
+  }, [_vm._v("No")]), _vm._v(" "), _c("th", [_vm._v("Nama Peserta")]), _vm._v(" "), _c("th", {
+    attrs: {
+      width: "20%"
+    }
+  }, [_vm._v("Nilai")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "mb-3"
+  }, [_c("i", {
+    staticClass: "fas fa-clipboard-list fa-3x text-muted"
+  })]);
 }];
 render._withStripped = true;
 
@@ -15955,6 +16633,112 @@ var staticRenderFns = [function () {
   }, [_c("th", [_vm._v("No")]), _vm._v(" "), _c("th", [_vm._v("Nama")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Phone")]), _vm._v(" "), _c("th", [_vm._v("Alamat")]), _vm._v(" "), _c("th", [_vm._v("Role")]), _vm._v(" "), _c("th", [_vm._v("Actions")])])]);
 }];
 render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.table th[data-v-55f26d98] {\r\n  vertical-align: middle;\n}\n.form-control[data-v-55f26d98] {\r\n  text-align: center;\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/lib/css-base.js":
+/*!*************************************************!*\
+  !*** ./node_modules/css-loader/lib/css-base.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
 
 
 /***/ }),
@@ -33565,6 +34349,545 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/addStyles.js":
+/*!****************************************************!*\
+  !*** ./node_modules/style-loader/lib/addStyles.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getTarget = function (target, parent) {
+  if (parent){
+    return parent.querySelector(target);
+  }
+  return document.querySelector(target);
+};
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(target, parent) {
+                // If passing function in options, then use it for resolve "head" element.
+                // Useful for Shadow Root style i.e
+                // {
+                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
+                // }
+                if (typeof target === 'function') {
+                        return target();
+                }
+                if (typeof memo[target] === "undefined") {
+			var styleTarget = getTarget.call(this, target, parent);
+			// Special case to return head of iframe instead of iframe itself
+			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+				try {
+					// This will throw an exception if access to iframe is blocked
+					// due to cross-origin restrictions
+					styleTarget = styleTarget.contentDocument.head;
+				} catch(e) {
+					styleTarget = null;
+				}
+			}
+			memo[target] = styleTarget;
+		}
+		return memo[target]
+	};
+})();
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(/*! ./urls */ "./node_modules/style-loader/lib/urls.js");
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+        if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
+		var nextSibling = getElement(options.insertAt.before, target);
+		target.insertBefore(style, nextSibling);
+	} else {
+		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+
+	if(options.attrs.nonce === undefined) {
+		var nonce = getNonce();
+		if (nonce) {
+			options.attrs.nonce = nonce;
+		}
+	}
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function getNonce() {
+	if (false) {}
+
+	return __webpack_require__.nc;
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = typeof options.transform === 'function'
+		 ? options.transform(obj.css) 
+		 : options.transform.default(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/urls.js":
+/*!***********************************************!*\
+  !*** ./node_modules/style-loader/lib/urls.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -50748,6 +52071,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/penilaian/IndexComponent.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/admin/penilaian/IndexComponent.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true */ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true");
+/* harmony import */ var _IndexComponent_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IndexComponent.vue?vue&type=script&lang=js */ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js");
+/* empty/unused harmony star reexport *//* harmony import */ var _IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css */ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _IndexComponent_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__["render"],
+  _IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "55f26d98",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/penilaian/IndexComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./IndexComponent.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=script&lang=js");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css":
+/*!****************************************************************************************************************************!*\
+  !*** ./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css ***!
+  \****************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=style&index=0&id=55f26d98&scoped=true&lang=css");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_style_index_0_id_55f26d98_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true ***!
+  \**************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!../../../../../node_modules/vue-loader/lib??vue-loader-options!./IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/penilaian/IndexComponent.vue?vue&type=template&id=55f26d98&scoped=true");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ref_6_node_modules_vue_loader_lib_index_js_vue_loader_options_IndexComponent_vue_vue_type_template_id_55f26d98_scoped_true__WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/penjadwalan/IndexComponent.vue":
 /*!**********************************************************************!*\
   !*** ./resources/js/components/admin/penjadwalan/IndexComponent.vue ***!
@@ -51473,17 +52883,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_admin_materi_EditComponent_vue__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./components/admin/materi/EditComponent.vue */ "./resources/js/components/admin/materi/EditComponent.vue");
 /* harmony import */ var _components_admin_penjadwalan_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./components/admin/penjadwalan/IndexComponent.vue */ "./resources/js/components/admin/penjadwalan/IndexComponent.vue");
 /* harmony import */ var _components_admin_absensi_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./components/admin/absensi/IndexComponent.vue */ "./resources/js/components/admin/absensi/IndexComponent.vue");
-/* harmony import */ var _components_admin_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/admin/pembayaran/IndexComponent.vue */ "./resources/js/components/admin/pembayaran/IndexComponent.vue");
-/* harmony import */ var _components_admin_pembayaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/admin/pembayaran/CreateComponent.vue */ "./resources/js/components/admin/pembayaran/CreateComponent.vue");
-/* harmony import */ var _components_admin_pembayaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/admin/pembayaran/EditComponent.vue */ "./resources/js/components/admin/pembayaran/EditComponent.vue");
-/* harmony import */ var _components_admin_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/admin/pendaftaran/IndexComponent.vue */ "./resources/js/components/admin/pendaftaran/IndexComponent.vue");
-/* harmony import */ var _components_admin_pendaftaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/admin/pendaftaran/CreateComponent.vue */ "./resources/js/components/admin/pendaftaran/CreateComponent.vue");
-/* harmony import */ var _components_admin_pendaftaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./components/admin/pendaftaran/EditComponent.vue */ "./resources/js/components/admin/pendaftaran/EditComponent.vue");
-/* harmony import */ var _components_admin_laporan_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./components/admin/laporan_pendaftaran/IndexComponent.vue */ "./resources/js/components/admin/laporan_pendaftaran/IndexComponent.vue");
-/* harmony import */ var _components_admin_laporan_kelas_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./components/admin/laporan_kelas/IndexComponent.vue */ "./resources/js/components/admin/laporan_kelas/IndexComponent.vue");
-/* harmony import */ var _components_admin_laporan_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./components/admin/laporan_pembayaran/IndexComponent.vue */ "./resources/js/components/admin/laporan_pembayaran/IndexComponent.vue");
-/* harmony import */ var _components_admin_laporan_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./components/admin/laporan_penggajian/IndexComponent.vue */ "./resources/js/components/admin/laporan_penggajian/IndexComponent.vue");
-/* harmony import */ var _components_admin_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./components/admin/penggajian/IndexComponent.vue */ "./resources/js/components/admin/penggajian/IndexComponent.vue");
+/* harmony import */ var _components_admin_penilaian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/admin/penilaian/IndexComponent.vue */ "./resources/js/components/admin/penilaian/IndexComponent.vue");
+/* harmony import */ var _components_admin_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/admin/pembayaran/IndexComponent.vue */ "./resources/js/components/admin/pembayaran/IndexComponent.vue");
+/* harmony import */ var _components_admin_pembayaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/admin/pembayaran/CreateComponent.vue */ "./resources/js/components/admin/pembayaran/CreateComponent.vue");
+/* harmony import */ var _components_admin_pembayaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/admin/pembayaran/EditComponent.vue */ "./resources/js/components/admin/pembayaran/EditComponent.vue");
+/* harmony import */ var _components_admin_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/admin/pendaftaran/IndexComponent.vue */ "./resources/js/components/admin/pendaftaran/IndexComponent.vue");
+/* harmony import */ var _components_admin_pendaftaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./components/admin/pendaftaran/CreateComponent.vue */ "./resources/js/components/admin/pendaftaran/CreateComponent.vue");
+/* harmony import */ var _components_admin_pendaftaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./components/admin/pendaftaran/EditComponent.vue */ "./resources/js/components/admin/pendaftaran/EditComponent.vue");
+/* harmony import */ var _components_admin_laporan_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./components/admin/laporan_pendaftaran/IndexComponent.vue */ "./resources/js/components/admin/laporan_pendaftaran/IndexComponent.vue");
+/* harmony import */ var _components_admin_laporan_kelas_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./components/admin/laporan_kelas/IndexComponent.vue */ "./resources/js/components/admin/laporan_kelas/IndexComponent.vue");
+/* harmony import */ var _components_admin_laporan_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./components/admin/laporan_pembayaran/IndexComponent.vue */ "./resources/js/components/admin/laporan_pembayaran/IndexComponent.vue");
+/* harmony import */ var _components_admin_laporan_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./components/admin/laporan_penggajian/IndexComponent.vue */ "./resources/js/components/admin/laporan_penggajian/IndexComponent.vue");
+/* harmony import */ var _components_admin_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./components/admin/penggajian/IndexComponent.vue */ "./resources/js/components/admin/penggajian/IndexComponent.vue");
 var _window$auth;
 
 
@@ -51528,6 +52939,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('apexchart', vue_apexcharts
 
 
 // absensi page components
+
+
+// penilaian page components
 
 
 // pembayaran page component
@@ -51722,6 +53136,16 @@ var routes = [{
     middleware: [staffMiddleware, storeUserMiddleware]
   }
 },
+// IndexPenilaianComponent page
+{
+  path: '/v1/admin/penilaian',
+  component: _components_admin_penilaian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_24__["default"],
+  name: "admin.penilaian.index",
+  meta: {
+    title: 'Penilaian',
+    middleware: [staffMiddleware, storeUserMiddleware]
+  }
+},
 // materi page
 {
   path: '/v1/admin/materi',
@@ -51751,7 +53175,7 @@ var routes = [{
 // pembayaran page
 {
   path: '/v1/admin/pembayaran/',
-  component: _components_admin_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_24__["default"],
+  component: _components_admin_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_25__["default"],
   name: "admin.pembayaran.index",
   meta: {
     title: 'Pembayaran',
@@ -51759,7 +53183,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/pembayaran/create',
-  component: _components_admin_pembayaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_25__["default"],
+  component: _components_admin_pembayaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
   name: "admin.pembayaran.create",
   meta: {
     title: 'Pembayaran',
@@ -51767,7 +53191,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/pembayaran/:id',
-  component: _components_admin_pembayaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
+  component: _components_admin_pembayaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
   name: "admin.pembayaran.edit",
   meta: {
     title: 'Pembayaran',
@@ -51777,7 +53201,7 @@ var routes = [{
 // pendaftaran page
 {
   path: '/v1/admin/pendaftaran/',
-  component: _components_admin_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
+  component: _components_admin_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
   name: "admin.pendaftaran.index",
   meta: {
     title: 'Pendaftaran',
@@ -51785,7 +53209,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/pendaftaran/create',
-  component: _components_admin_pendaftaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
+  component: _components_admin_pendaftaran_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_29__["default"],
   name: "admin.pendaftaran.create",
   meta: {
     title: 'Pendaftaran',
@@ -51793,7 +53217,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/pendaftaran/:id',
-  component: _components_admin_pendaftaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_29__["default"],
+  component: _components_admin_pendaftaran_EditComponent_vue__WEBPACK_IMPORTED_MODULE_30__["default"],
   name: "admin.pendaftaran.edit",
   meta: {
     title: 'Pendaftaran',
@@ -51803,7 +53227,7 @@ var routes = [{
 // laporan page
 {
   path: '/v1/admin/laporan/pendaftaran/',
-  component: _components_admin_laporan_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_30__["default"],
+  component: _components_admin_laporan_pendaftaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_31__["default"],
   name: "admin.laporan_pendaftaran.index",
   meta: {
     title: 'Laporan Pendaftaran',
@@ -51811,7 +53235,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/laporan/kelas/',
-  component: _components_admin_laporan_kelas_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_31__["default"],
+  component: _components_admin_laporan_kelas_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_32__["default"],
   name: "admin.laporan_kelas.index",
   meta: {
     title: 'Laporan Kelas',
@@ -51819,7 +53243,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/laporan/pembayaran/',
-  component: _components_admin_laporan_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_32__["default"],
+  component: _components_admin_laporan_pembayaran_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_33__["default"],
   name: "admin.laporan_pembayaran.index",
   meta: {
     title: 'Laporan Pembayaran',
@@ -51827,7 +53251,7 @@ var routes = [{
   }
 }, {
   path: '/v1/admin/laporan/penggajian/',
-  component: _components_admin_laporan_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_33__["default"],
+  component: _components_admin_laporan_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_34__["default"],
   name: "admin.laporan_penggajian.index",
   meta: {
     title: 'Laporan Penggajian',
@@ -51837,7 +53261,7 @@ var routes = [{
 // penggajian page
 {
   path: '/v1/admin/penggajian/',
-  component: _components_admin_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_34__["default"],
+  component: _components_admin_penggajian_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_35__["default"],
   name: "admin.penggajian.index",
   meta: {
     title: 'Penggajian',

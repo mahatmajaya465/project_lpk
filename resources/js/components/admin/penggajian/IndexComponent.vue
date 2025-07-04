@@ -196,6 +196,7 @@ export default {
         }
       } catch (error) {
         console.error(`Error fetching penggajian for instruktur ${instrukturId}:`, error);
+        AlertMsg(`Gagal memuat data penggajian untuk instruktur ${instrukturId}`, true);
       }
     },
   },

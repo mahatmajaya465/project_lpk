@@ -10,11 +10,11 @@
           </div>
           <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
-              <router-link
-                :to="{ name: 'admin.pendaftaran.create' }"
+              <a
+                href="#"
+                @click.prevent="printReport"
                 class="btn btn-primary d-none d-sm-inline-block"
               >
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -36,8 +36,8 @@
                     d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
                   />
                 </svg>
-                Cetak Laporan</router-link
-              >
+                Cetak Laporan
+              </a>
             </div>
           </div>
         </div>
@@ -51,11 +51,7 @@
               <div class="d-flex mb-3 justify-content-end">
                 <form @submit.prevent="fetchPendaftaranData">
                   <div class="input-group">
-                    <input
-                      type="month"
-                      class="form-control"
-                      v-model="filter.periode"
-                    />
+                    <input type="month" class="form-control" v-model="filter.periode" />
                     <button class="btn" type="submit" style="height: 36px">Go!</button>
                   </div>
                 </form>
@@ -160,6 +156,99 @@ export default {
   },
   computed: {},
   methods: {
+    printReport() {
+      // Buat window baru
+      const printWindow = window.open("", "_blank");
+
+      // Format tanggal untuk print
+      const formatDate = (dateString) => {
+        if (!dateString) return "-";
+        const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+        return new Date(dateString).toLocaleDateString("id-ID", options);
+      };
+
+      // Ambil HTML yang ingin dicetak
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Laporan Pendaftaran</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .report-header { text-align: center; margin-bottom: 20px; }
+            .report-title { font-size: 18px; font-weight: bold; }
+            .report-period { font-size: 14px; margin-bottom: 10px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+            .text-center { text-align: center; }
+            .page-break { page-break-after: always; }
+            .footer { margin-top: 20px; display: flex; justify-content: space-between; }
+          </style>
+        </head>
+        <body>
+          <div class="report-header">
+            <div class="report-title">LAPORAN PENDAFTARAN</div>
+            ${
+              this.filter.periode
+                ? `<div class="report-period">Periode: ${this.filter.periode}</div>`
+                : ""
+            }
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th class="text-center">No</th>
+                <th>Kode Pendaftaran</th>
+                <th>Nama Peserta</th>
+                <th>Program</th>
+                <th>Kelas</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.pendaftarans
+                .map(
+                  (pendaftaran, index) => `
+                <tr>
+                  <td class="text-center">${
+                    this.meta.current_page * this.meta.per_page -
+                    this.meta.per_page +
+                    index +
+                    1
+                  }</td>
+                  <td>${pendaftaran.kode_pendaftaran}</td>
+                  <td>${pendaftaran.peserta.user.name}</td>
+                  <td>${pendaftaran.program.nama_program}</td>
+                  <td>${pendaftaran.kelas.nama_kelas}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+          
+          <div class="footer">
+            <div>Total Data: ${this.meta.total}</div>
+            <div>Dicetak pada: ${new Date().toLocaleString("id-ID")}</div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(() => {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     async fetchPendaftaranData(page = 1) {
       Loading();
       this.meta.current_page = page;
@@ -168,7 +257,7 @@ export default {
           params: {
             page: this.meta.current_page,
             per_page: this.meta.per_page,
-            ...this.filter
+            ...this.filter,
           },
         });
 

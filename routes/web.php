@@ -223,4 +223,22 @@ Route::prefix('v1')->middleware('auth')->group(function () {
             Route::get('penggajian', 'PenggajianController@index')->name('index');
         });
     });
+
+    // penilaian
+    Route::prefix('admin')->group(function () {
+        Route::prefix('penilaian')->name('penilaian.')->group(function () {
+            Route::get('', 'PenilaianController@index')->name('index');
+            Route::get('{id}', 'PenilaianController@index')->name('index');
+            Route::get('create', 'PenilaianController@index')->name('index');
+        });
+    });
+    Route::prefix('penilaian')->name('penilaian.')->group(function () {
+        Route::get('list', 'PenilaianController@list')->name('list');
+        Route::get('find/{id}', 'PenilaianController@find')->name('find');
+
+        Route::post('update-batch', 'PenilaianController@updateBatch')->name('update-batch');
+        Route::post('store', 'PenilaianController@store')->name('store');
+        Route::post('update/{id}', 'PenilaianController@update')->name('update');
+        Route::post('delete/{id}', 'PenilaianController@delete')->name('delete');
+    });
 });

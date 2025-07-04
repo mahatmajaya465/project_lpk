@@ -50,6 +50,7 @@
                                 'btn btn-outline-primary': true,
                                 disabled: !jadwal.can_absen,
                               }"
+                              v-if="user.roles != 'super_admin'"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -308,6 +309,7 @@ export default {
         lokasi: "",
         type: "clock_in", // Default type for absensi
       },
+      user: this.$user,
     };
   },
   created() {

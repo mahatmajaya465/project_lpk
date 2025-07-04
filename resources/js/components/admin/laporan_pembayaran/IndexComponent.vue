@@ -10,11 +10,11 @@
           </div>
           <div class="col-auto ms-auto d-print-none">
             <div class="btn-list">
-              <router-link
-                :to="{ name: 'admin.pembayaran.create' }"
+              <a
+                href="#"
+                @click.prevent="printReport"
                 class="btn btn-primary d-none d-sm-inline-block"
               >
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -36,8 +36,8 @@
                     d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z"
                   />
                 </svg>
-                Cetak Laporan</router-link
-              >
+                Cetak Laporan
+              </a>
             </div>
           </div>
         </div>
@@ -51,11 +51,7 @@
               <div class="d-flex mb-3 justify-content-end">
                 <form @submit.prevent="fetchPembayaranData">
                   <div class="input-group">
-                    <input
-                      type="month"
-                      class="form-control"
-                      v-model="filter.periode"
-                    />
+                    <input type="month" class="form-control" v-model="filter.periode" />
                     <button class="btn" type="submit" style="height: 36px">Go!</button>
                   </div>
                 </form>
@@ -93,7 +89,9 @@
                         {{ pembayaran.pendaftaran.program.nama_program }}
                       </td>
                       <td style="text-wrap: nowrap">{{ pembayaran.nominal_rp }}</td>
-                      <td style="text-wrap: nowrap">{{ pembayaran.status_strtoupper }}</td>
+                      <td style="text-wrap: nowrap">
+                        {{ pembayaran.status_strtoupper }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -153,6 +151,7 @@ export default {
       filter: {
         search: "",
         periode: "",
+        status: "settlement",
       },
     };
   },
@@ -161,6 +160,110 @@ export default {
   },
   computed: {},
   methods: {
+    printReport() {
+      // Buat window baru
+      const printWindow = window.open("", "_blank");
+
+      // Format nominal untuk print
+      const formatNominal = (nominal) => {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        })
+          .format(nominal)
+          .replace("Rp", "Rp ");
+      };
+
+      // Ambil HTML yang ingin dicetak
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Laporan Pembayaran</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .report-header { text-align: center; margin-bottom: 20px; }
+            .report-title { font-size: 18px; font-weight: bold; }
+            .report-period { font-size: 14px; margin-bottom: 10px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            .page-break { page-break-after: always; }
+            .footer { margin-top: 20px; display: flex; justify-content: space-between; }
+          </style>
+        </head>
+        <body>
+          <div class="report-header">
+            <div class="report-title">LAPORAN PEMBAYARAN</div>
+            ${
+              this.filter.periode
+                ? `<div class="report-period">Periode: ${this.filter.periode}</div>`
+                : ""
+            }
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th class="text-center">No</th>
+                <th>Kode</th>
+                <th>Tgl. Pembayaran</th>
+                <th>Nama Peserta</th>
+                <th>Kelas</th>
+                <th>Program</th>
+                <th class="text-right">Nominal</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.pembayarans
+                .map(
+                  (pembayaran, index) => `
+                <tr>
+                  <td class="text-center">${
+                    this.meta.current_page * this.meta.per_page -
+                    this.meta.per_page +
+                    index +
+                    1
+                  }</td>
+                  <td>${pembayaran.kode_pembayaran}</td>
+                  <td>${pembayaran.tgl_pembayaran}</td>
+                  <td>${pembayaran.pendaftaran.peserta.user.name}</td>
+                  <td>${pembayaran.pendaftaran.kelas.nama_kelas}</td>
+                  <td>${pembayaran.pendaftaran.program.nama_program}</td>
+                  <td class="text-right">${formatNominal(pembayaran.nominal)}</td>
+                  <td class="text-center">${pembayaran.status_strtoupper}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+          
+          <div class="footer">
+            <div>Total Data: ${this.meta.total}</div>
+            <div>Dicetak pada: ${new Date().toLocaleString()}</div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Tulis konten ke window baru
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // Tunggu konten dimuat lalu cetak
+      printWindow.onload = function () {
+        setTimeout(() => {
+          printWindow.print();
+          // printWindow.close(); // Opsional: tutup window setelah cetak
+        }, 500);
+      };
+    },
     async fetchPembayaranData(page = 1) {
       Loading();
       this.meta.current_page = page;
@@ -169,7 +272,7 @@ export default {
           params: {
             page: this.meta.current_page,
             per_page: this.meta.per_page,
-            ...this.filter
+            ...this.filter,
           },
         });
 
@@ -183,34 +286,6 @@ export default {
         Swal.close();
         AlertMsg(error.response.data.message, true);
       }
-    },
-    deletePembayaran(id) {
-      Swal.fire({
-        title: "Hapus data?",
-        text: "Data yang dihapus tidak dapat dipulihkan",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus!",
-        cancelButtonText: "Batal",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Loading();
-          axios
-            .post("/v1/pembayaran/delete/" + id)
-            .then((response) => {
-              const data = response.data;
-              AlertMsg(data.message, data.error);
-              if (!data.error) {
-                this.fetchPembayaranData(this.meta.current_page);
-              }
-            })
-            .catch((error) => {
-              AlertMsg(error.response.data.message, true);
-            });
-        }
-      });
     },
   },
 };
