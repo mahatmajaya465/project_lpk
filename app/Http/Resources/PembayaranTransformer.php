@@ -43,6 +43,7 @@ class PembayaranTransformer extends JsonResource
             'bukti_pembayaran_url' => asset('uploads/' . $this->bukti_pembayaran),
             'metode_pembayaran' => $this->metode_pembayaran,
             'pendaftaran' => $pendaftaran,
+            'can_delete' => auth()->user()->roles === 'student' ? false : true,
         ];
     }
 }

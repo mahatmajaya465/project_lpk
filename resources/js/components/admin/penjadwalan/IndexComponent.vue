@@ -323,6 +323,10 @@ export default {
       }
     },
     submitForm() {
+      if (!this.penjadwalan.tgl_mulai || !this.penjadwalan.tgl_selesai || !this.penjadwalan.materi_id || !this.penjadwalan.instruktur_id) {
+        AlertMsg("Tanggal mulai dan selesai harus diisi", true);
+        return;
+      }
       axios
         .post("/v1/penjadwalan/store", {
           ...this.penjadwalan,

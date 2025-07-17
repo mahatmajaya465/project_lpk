@@ -4185,7 +4185,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         nominal: null,
         status: "pending"
       },
-      bukti_pembayaran: null
+      bukti_pembayaran: null,
+      user: this.$user
     };
   },
   created: function created() {
@@ -5480,6 +5481,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     submitForm: function submitForm() {
       var _this3 = this;
+      if (!this.penjadwalan.tgl_mulai || !this.penjadwalan.tgl_selesai || !this.penjadwalan.materi_id || !this.penjadwalan.instruktur_id) {
+        AlertMsg("Tanggal mulai dan selesai harus diisi", true);
+        return;
+      }
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/penjadwalan/store", _objectSpread(_objectSpread({}, this.penjadwalan), {}, {
         kelas_kursus_id: this.$route.query.id_kelas
       })).then(function (response) {
@@ -11952,7 +11957,10 @@ var render = function render() {
       }
     }
   })])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
-    staticClass: "col-md-6 col-12"
+    "class": {
+      "col-md-6 col-12": true,
+      "d-none": _vm.user.roles == "student"
+    }
   }, [_c("div", {
     staticClass: "form-group mb-3"
   }, [_c("label", {
@@ -11970,7 +11978,8 @@ var render = function render() {
     attrs: {
       name: "status",
       id: "status",
-      required: ""
+      required: "",
+      readonly: _vm.user.roles == "student"
     },
     on: {
       change: function change($event) {
@@ -12304,7 +12313,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                        Edit")]), _vm._v(" "), _c("button", {
+    })]), _vm._v("\n                        Edit")]), _vm._v(" "), pembayaran.can_delete ? _c("button", {
       staticClass: "btn btn-outline-danger",
       on: {
         click: function click($event) {
@@ -12350,7 +12359,7 @@ var render = function render() {
       attrs: {
         d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
       }
-    })]), _vm._v("\n                        Hapus\n                      ")])], 1)]);
+    })]), _vm._v("\n                        Hapus\n                      ")]) : _vm._e()], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {

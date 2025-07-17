@@ -122,6 +122,7 @@
                         <button
                           @click="deletePembayaran(pembayaran.id)"
                           class="btn btn-outline-danger"
+                          v-if="pembayaran.can_delete"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

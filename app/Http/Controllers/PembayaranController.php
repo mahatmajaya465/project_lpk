@@ -58,11 +58,11 @@ class PembayaranController extends Controller
         try {
             $auth = auth()->user();
 
-            if (!(in_array($auth->roles, ['super_admin']))) {
-                if ($id != $auth->id) {
-                    abort(500);
-                }
-            }
+            // if (!(in_array($auth->roles, ['super_admin']))) {
+            //     if ($id != $auth->id) {
+            //         abort(500);
+            //     }
+            // }
 
             $pembayaran = Pembayaran::find($id);
 

@@ -18,7 +18,7 @@
             <div class="card-body">
               <form class="form" @submit.prevent="submitPembayaranData">
                 <div class="row">
-                  <div class="col-md-12 col-12" style="display: none;">
+                  <div class="col-md-12 col-12" style="display: none">
                     <div class="form-group mb-3">
                       <label for="last-name-column">Pendaftaran</label>
                       <select
@@ -123,7 +123,13 @@
                       />
                     </div>
                   </div>
-                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
+                  <div
+                    :class="{
+                      'col-md-6 col-12': true,
+                      'd-none': user.roles == 'student',
+                    }"
+                    v-if="pembayaran.pendaftaran_id"
+                  >
                     <div class="form-group mb-3">
                       <label for="last-name-column">Status Pembayaran</label>
                       <select
@@ -132,6 +138,7 @@
                         id="status"
                         class="form-control"
                         required
+                        :readonly="user.roles == 'student'"
                       >
                         <option value="pending">Menunggu Konfirmasi</option>
                         <option value="settlement">Sudah Dibayarkan</option>
@@ -238,6 +245,7 @@ export default {
         status: "pending",
       },
       bukti_pembayaran: null,
+      user: this.$user,
     };
   },
   async created() {
