@@ -231,10 +231,10 @@ export default {
       this.pembayaran.status = "pending";
     } else {
       this.status_pembayaran = [
-        { value: "pending", label: "Pending" },
-        { value: "settlement", label: "Settled" },
-        { value: "cancel", label: "Cancelled" },
-        { value: "expire", label: "Expired" },
+        { value: "pending", label: "Menunggu Konfirmasi" },
+        { value: "settlement", label: "Sudah Dibayar" },
+        { value: "cancel", label: "Dibatalkan" },
+        { value: "expire", label: "Kadaluarsa" },
       ];
     }
   },

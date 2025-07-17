@@ -20,6 +20,15 @@ class PembayaranTransformer extends JsonResource
     {
         $pendaftaran = new PendaftaranTransformer(Pendaftaran::find($this->pendaftaran_id));
 
+        $status = "Menunggu Konfirmasi";
+        if ($this->status === 'settlement') {
+            $status = "Sudah Dibayar";
+        } elseif ($this->status === 'cancel') {
+            $status = "Dibatalkan";
+        } elseif ($this->status === 'expire') {
+            $status = "Kadaluarsa";
+        }
+
         return [
             'id' => $this->id,
             'kode_pembayaran' => $this->kode_pembayaran,
@@ -28,7 +37,7 @@ class PembayaranTransformer extends JsonResource
             'nominal' => $this->nominal,
             'nominal_rp' => $this->rupiah($this->nominal),
             'status' => $this->status,
-            'status_strtoupper' => strtoupper($this->status),
+            'status_strtoupper' => strtoupper($status),
             'bukti_pembayaran' => $this->bukti_pembayaran,
             'bukti_pembayaran_url' => asset('uploads/' . $this->bukti_pembayaran),
             'metode_pembayaran' => $this->metode_pembayaran,

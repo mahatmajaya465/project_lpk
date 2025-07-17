@@ -4028,16 +4028,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     } else {
       this.status_pembayaran = [{
         value: "pending",
-        label: "Pending"
+        label: "Menunggu Konfirmasi"
       }, {
         value: "settlement",
-        label: "Settled"
+        label: "Sudah Dibayar"
       }, {
         value: "cancel",
-        label: "Cancelled"
+        label: "Dibatalkan"
       }, {
         value: "expire",
-        label: "Expired"
+        label: "Kadaluarsa"
       }];
     }
   },
@@ -11983,15 +11983,15 @@ var render = function render() {
     attrs: {
       value: "pending"
     }
-  }, [_vm._v("Pending")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Menunggu Konfirmasi")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "settlement"
     }
-  }, [_vm._v("Settled")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Sudah Dibayarkan")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "cancel"
     }
-  }, [_vm._v("Cancelled")])])])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
+  }, [_vm._v("Dibatalkan")])])])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"

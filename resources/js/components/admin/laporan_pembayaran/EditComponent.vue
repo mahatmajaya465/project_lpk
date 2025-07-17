@@ -134,9 +134,9 @@
                         class="form-control"
                         required
                       >
-                        <option value="pending">Pending</option>
-                        <option value="settlement">Settled</option>
-                        <option value="cancel">Cancelled</option>
+                        <option value="pending">Menunggu Konfirmasi</option>
+                        <option value="settlement">Sudah Dibayar</option>
+                        <option value="cancel">Dibatalkan</option>
                       </select>
                     </div>
                   </div>
