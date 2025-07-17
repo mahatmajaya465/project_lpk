@@ -2098,8 +2098,40 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee2);
       }))();
     },
+    calculateDistance: function calculateDistance(lat1, lon1, lat2, lon2) {
+      var R = 6371e3; // Earth radius in meters
+      var φ1 = lat1 * Math.PI / 180;
+      var φ2 = lat2 * Math.PI / 180;
+      var Δφ = (lat2 - lat1) * Math.PI / 180;
+      var Δλ = (lon2 - lon1) * Math.PI / 180;
+      var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // Distance in meters
+    },
     submitAbsensi: function submitAbsensi() {
       var _this3 = this;
+      var targetLat = -8.69080779884201;
+      var targetLon = 115.22630535439257;
+      if (!this.absen.latitude || !this.absen.longitude) {
+        AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
+        return;
+      }
+      var distance = this.calculateDistance(this.absen.latitude, this.absen.longitude, targetLat, targetLon);
+      if (distance > 100) {
+        Swal.fire({
+          title: "Lokasi tidak valid",
+          text: "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ok"
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            return;
+          }
+        });
+        return;
+      }
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/absensi/store", _objectSpread(_objectSpread({}, this.absen), this.penjadwalan)).then(function (response) {
         var data = response.data;
         AlertMsg(data.message, data.error);

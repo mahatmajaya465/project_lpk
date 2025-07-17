@@ -362,7 +362,54 @@ export default {
         }
       );
     },
+    calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Earth radius in meters
+      const φ1 = (lat1 * Math.PI) / 180;
+      const φ2 = (lat2 * Math.PI) / 180;
+      const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+      const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+      const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c; // Distance in meters
+    },
     submitAbsensi() {
+      const targetLat = -8.69080779884201;
+      const targetLon = 115.22630535439257;
+
+      if (!this.absen.latitude || !this.absen.longitude) {
+        AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
+        return;
+      }
+
+      const distance = this.calculateDistance(
+        this.absen.latitude,
+        this.absen.longitude,
+        targetLat,
+        targetLon
+      );
+
+      if (distance > 100) {
+        Swal.fire({
+          title: "Lokasi tidak valid",
+          text:
+            "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            return;
+          }
+        });
+
+        return;
+      }
+
       axios
         .post("/v1/absensi/store", {
           ...this.absen,
