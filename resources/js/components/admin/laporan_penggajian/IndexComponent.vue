@@ -64,6 +64,7 @@
                         <tr class="table-primary">
                           <th>Instruktur</th>
                           <th>Periode</th>
+                          <th>Honor per Jam</th>
                           <th>Total Jam kerja</th>
                           <th>Gaji</th>
                         </tr>
@@ -75,6 +76,9 @@
                           </td>
                           <td style="text-wrap: nowrap">
                             {{ instruktur.penggajian?.periode || "-" }}
+                          </td>
+                          <td style="text-wrap: nowrap">
+                            {{ instruktur.honor_perjam_rp }}
                           </td>
                           <td style="text-wrap: nowrap">
                             {{ instruktur.penggajian?.total_jam || "0" }}
@@ -228,6 +232,7 @@ export default {
                 <th>No</th>
                 <th>Nama Instruktur</th>
                 <th>Periode</th>
+                <th>Honor per Jam</th>
                 <th class="text-right">Total Jam Kerja</th>
                 <th class="text-right">Gaji</th>
               </tr>
@@ -240,6 +245,7 @@ export default {
                   <td class="text-center">${index + 1}</td>
                   <td>${instruktur.user.name}</td>
                   <td>${formatPeriode(instruktur.penggajian?.periode)}</td>
+                  <td>${instruktur.honor_perjam_rp}</td>
                   <td class="text-right">${
                     instruktur.penggajian?.total_jam || "0"
                   } jam</td>
