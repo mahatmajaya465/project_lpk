@@ -93,4 +93,5 @@ class Kelas extends Model
 
         return $kelas;
     }
+
 }

@@ -63,7 +63,7 @@
                       <thead>
                         <tr class="table-primary">
                           <th>Kode</th>
-                          <th>Nama</th>
+                          <th>Kelas</th>
                           <th>Program</th>
                           <th>Tgl. mulai</th>
                           <th>Tgl. selesai</th>
@@ -88,7 +88,7 @@
                             {{ kela.tgl_selesai_indo }}
                           </td>
                           <td style="text-wrap: nowrap">
-                            {{ kela.jumlah_peserta }} orang
+                            {{ kela.jumlah_peserta_ikut }} orang
                           </td>
                         </tr>
                       </tbody>
@@ -143,7 +143,6 @@
 <script>
 import axios from "axios";
 import { truncateText } from "../../../utils/truncateText";
-import { filter } from "lodash";
 
 export default {
   components: {},
@@ -202,7 +201,7 @@ export default {
               <tr>
                 <th>No</th>
                 <th>Kode</th>
-                <th>Nama</th>
+                <th>Kelas</th>
                 <th>Program</th>
                 <th>Tgl. Mulai</th>
                 <th>Tgl. Selesai</th>
@@ -220,7 +219,7 @@ export default {
                   <td>${kela.program.nama_program}</td>
                   <td>${kela.tgl_mulai_indo}</td>
                   <td>${kela.tgl_selesai_indo}</td>
-                  <td class="text-center">${kela.jumlah_peserta} orang</td>
+                  <td class="text-center">${kela.jumlah_peserta_ikut} orang</td>
                 </tr>
               `
                 )

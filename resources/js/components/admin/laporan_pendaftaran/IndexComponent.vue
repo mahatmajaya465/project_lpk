@@ -62,6 +62,7 @@
                     <tr class="table-primary">
                       <th>No</th>
                       <th>Kode</th>
+                      <th>Tgl. pendaftaran</th>
                       <th>Nama peserta</th>
                       <th>Program</th>
                       <th>Kelas</th>
@@ -79,6 +80,9 @@
                       </td>
                       <td style="text-wrap: nowrap">
                         {{ pendaftaran.kode_pendaftaran }}
+                      </td>
+                      <td style="text-wrap: nowrap">
+                        {{ pendaftaran.created_at }}
                       </td>
                       <td style="text-wrap: nowrap">
                         {{ pendaftaran.peserta.user.name }}
@@ -201,6 +205,7 @@ export default {
               <tr>
                 <th class="text-center">No</th>
                 <th>Kode Pendaftaran</th>
+                <th>Tgl Pendaftaran</th>
                 <th>Nama Peserta</th>
                 <th>Program</th>
                 <th>Kelas</th>
@@ -218,6 +223,7 @@ export default {
                     1
                   }</td>
                   <td>${pendaftaran.kode_pendaftaran}</td>
+                  <td>${pendaftaran.created_at}</td>
                   <td>${pendaftaran.peserta.user.name}</td>
                   <td>${pendaftaran.program.nama_program}</td>
                   <td>${pendaftaran.kelas.nama_kelas}</td>

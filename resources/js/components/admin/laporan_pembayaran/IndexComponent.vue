@@ -175,6 +175,11 @@ export default {
           .replace("Rp", "Rp ");
       };
 
+      // Hitung total pembayaran
+      const totalPembayaran = this.pembayarans.reduce((sum, pembayaran) => {
+        return sum + (pembayaran.nominal || 0);
+      }, 0);
+
       // Ambil HTML yang ingin dicetak
       const printContent = `
         <!DOCTYPE html>
@@ -240,6 +245,14 @@ export default {
               `
                 )
                 .join("")}
+                
+              <tr class="total-row">
+                <td colspan="6" class="text-right"><strong>TOTAL</strong></td>
+                <td class="text-right"><strong>${this.formatCurrency(
+                  totalPembayaran
+                )}</strong></td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
           
@@ -263,6 +276,13 @@ export default {
           // printWindow.close(); // Opsional: tutup window setelah cetak
         }, 500);
       };
+    },
+    formatCurrency(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(value);
     },
     async fetchPembayaranData(page = 1) {
       Loading();

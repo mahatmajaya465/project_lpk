@@ -32,6 +32,7 @@ class KelasTransformer extends JsonResource
             'jumlah_peserta' => $this->jumlah_peserta,
             'status' => $this->status,
             'program' => new ProgramTransformer($this->program),
+            'jumlah_peserta_ikut' => $this->peserta->count(),
         ];
     }
 }

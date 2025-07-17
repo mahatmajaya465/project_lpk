@@ -76,7 +76,7 @@
                           <th>Program</th>
                           <th>Tgl. mulai</th>
                           <th>Tgl. selesai</th>
-                          <th>Jml. peserta</th>
+                          <th>Max. peserta</th>
                           <th>Actions</th>
                         </tr>
                       </thead>

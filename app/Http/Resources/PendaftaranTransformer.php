@@ -23,6 +23,7 @@ class PendaftaranTransformer extends JsonResource
             'peserta' => new PesertaTransformer($this->peserta),
             'program' => new ProgramTransformer($this->program),
             'kelas' => new KelasTransformer($this->kelas),
+            'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i') : null,
         ];
     }
 }
