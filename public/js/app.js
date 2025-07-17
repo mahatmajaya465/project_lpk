@@ -2180,7 +2180,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     absensiKelas: function absensiKelas(id) {
       this.showAbsenModal = true;
-      this.absen.tanggal = new Date().toISOString().slice(0, 16);
+      var now = new Date();
+      var offsetWITA = 16 * 60 * 60 * 1000; // UTC+8 (WITA)
+      var nowWITA = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + offsetWITA);
+      this.absen.tanggal = nowWITA.toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
       this.penjadwalan.id = id;
     }
   }
@@ -7035,6 +7038,7 @@ var render = function render() {
     staticClass: "form-control",
     attrs: {
       type: "datetime-local",
+      step: "60",
       readonly: ""
     },
     domProps: {

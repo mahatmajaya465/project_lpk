@@ -185,6 +185,7 @@
                   type="datetime-local"
                   class="form-control"
                   v-model="absen.tanggal"
+                  step="60"
                   readonly
                 />
               </div>
@@ -447,7 +448,13 @@ export default {
     },
     absensiKelas(id) {
       this.showAbsenModal = true;
-      this.absen.tanggal = new Date().toISOString().slice(0, 16);
+      const now = new Date();
+      const offsetWITA = 16 * 60 * 60 * 1000; // UTC+8 (WITA)
+      const nowWITA = new Date(
+        now.getTime() + now.getTimezoneOffset() * 60000 + offsetWITA
+      );
+
+      this.absen.tanggal = nowWITA.toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
       this.penjadwalan.id = id;
     },
   },

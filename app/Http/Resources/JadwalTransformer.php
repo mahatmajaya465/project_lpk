@@ -35,7 +35,7 @@ class JadwalTransformer extends JsonResource
             'kelas' => new KelasTransformer($this->kelas),
             'materi' => new MateriTransformer($this->materi),
             'absensi' => $absensi,
-            'can_absen' => date('Y-m-d') >= date('Y-m-d', strtotime($this->tgl_mulai)) ? true : false,
+            'can_absen' => date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', strtotime($this->tgl_mulai)) ? true : false,
         ];
     }
 }
