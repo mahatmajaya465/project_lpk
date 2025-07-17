@@ -92,7 +92,7 @@
                             ></div>
                           </td>
                           <td>
-                            <a :href="materi.silabus_url">
+                            <a :href="materi.silabus_url" target="_blank" v-if="materi.silabus">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
@@ -113,6 +113,7 @@
                                 <path d="M9 8h6" />
                               </svg>
                             </a>
+                            <span v-else class="text-muted">Tidak ada silabus</span>
                           </td>
                           <td style="text-wrap: nowrap">
                             <router-link

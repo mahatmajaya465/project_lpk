@@ -52,6 +52,9 @@ class Jadwal extends Model
     {
         if (auth()->user()->roles == "instruktur") {
             $instruktur = Instruktur::where('user_id', $request->user()->id)->first();
+            if (!$instruktur) {
+                abort(404, 'Instruktur not found');
+            }
             $jadwal = $this->whereNull('deleted_at')->where('instruktur_id', $instruktur->id);
         } else if (auth()->user()->roles == "student") {
             $peserta = Peserta::where('user_id', $request->user()->id)->first();

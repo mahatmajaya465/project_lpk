@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Traits\FileUpload;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Program extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FileUpload;
     
     protected $table = 'program_kursus';
 
@@ -17,6 +18,7 @@ class Program extends Model
         'nama_program',
         'harga',
         'deskripsi',
+        'thumbnail',
         'status'
     ];
 
@@ -45,12 +47,19 @@ class Program extends Model
 
     public function store($request): Program
     {
+
+        if ($request->file('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $thumbnail = $this->FileUpload($file, 'thumbnail');
+        }
+
         $program = new Program();
         $program->kode_program = $request->kode_program;
         $program->nama_program = $request->nama_program;
         $program->harga = $request->harga;
         $program->deskripsi = $request->deskripsi;
         $program->status = $request->status ?? 'active';
+        $program->thumbnail = $thumbnail ?? null;
 
         $program->save();
 
@@ -59,12 +68,21 @@ class Program extends Model
 
     public function updateProgram($request): Program
     {
+        if ($request->file('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $thumbnail = $this->FileUpload($file, 'thumbnail');
+        }
+
         $program = $this;
         $program->kode_program = $request->kode_program;
         $program->nama_program = $request->nama_program;
         $program->harga = $request->harga;
         $program->deskripsi = $request->deskripsi;
         $program->status = $request->status ?? 'active';
+        
+        if (isset($thumbnail)) {
+            $program->thumbnail = $thumbnail;
+        }
 
         $program->save();
 

@@ -16,10 +16,9 @@ class Penilaian extends Model
         'nilai',
     ];
 
-    // Pada model Penilaian
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function program()

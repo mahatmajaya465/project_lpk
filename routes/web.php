@@ -241,4 +241,17 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         Route::post('update/{id}', 'PenilaianController@update')->name('update');
         Route::post('delete/{id}', 'PenilaianController@delete')->name('delete');
     });
+
+    // sertifikat
+    Route::prefix('admin')->group(function () {
+        Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
+            Route::get('', 'SertifikatController@index')->name('index');
+            Route::get('{id}', 'SertifikatController@index')->name('index');
+            Route::get('create', 'SertifikatController@index')->name('index');
+        });
+    });
+    Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
+        Route::get('list', 'SertifikatController@list')->name('list');
+        Route::get('download/{id}', 'SertifikatController@download')->name('download');
+    });
 });

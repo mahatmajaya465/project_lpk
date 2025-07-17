@@ -6,7 +6,7 @@
           <div class="col">
             <!-- Page pre-title -->
             <div class="page-pretitle">Overview</div>
-            <h2 class="page-title">Jadwal Kelas</h2>
+            <h2 class="page-title">Absensi</h2>
           </div>
         </div>
       </div>

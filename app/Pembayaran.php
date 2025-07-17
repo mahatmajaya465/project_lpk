@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Traits\FileUpload;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pembayaran extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FileUpload;
 
     protected $table = 'pembayaran';
 
@@ -54,6 +55,11 @@ class Pembayaran extends Model
 
     public function store($request): Pembayaran
     {
+        if ($request->file('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $buktiPembayaran = $this->FileUpload($file, 'bukti_pembayaran');
+        }        
+
         $pembayaran = new Pembayaran();
         $pembayaran->kode_pembayaran = $request->kode_pembayaran;
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now();
@@ -62,6 +68,10 @@ class Pembayaran extends Model
         $pembayaran->status = $request->status ?? 'pending';
         $pembayaran->bukti_pembayaran = $request->bukti_pembayaran;
         $pembayaran->metode_pembayaran = $request->metode_pembayaran;
+
+        if (isset($buktiPembayaran)) {
+            $pembayaran->bukti_pembayaran = $buktiPembayaran;
+        }
 
         $pembayaran->save();
 
@@ -76,6 +86,11 @@ class Pembayaran extends Model
 
     public function updatePembayaran($request): Pembayaran
     {
+        if ($request->file('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $buktiPembayaran = $this->FileUpload($file, 'bukti_pembayaran');
+        }
+
         $pembayaran = $this;
         $pembayaran->kode_pembayaran = $request->kode_pembayaran;
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now(); 
@@ -84,6 +99,10 @@ class Pembayaran extends Model
         $pembayaran->status = $request->status ?? 'pending';
         $pembayaran->bukti_pembayaran = $request->bukti_pembayaran;
         $pembayaran->metode_pembayaran = $request->metode_pembayaran;
+
+        if (isset($buktiPembayaran)) {
+            $pembayaran->bukti_pembayaran = $buktiPembayaran;
+        }
 
         $pembayaran->save();
 

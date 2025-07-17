@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Traits\FileUpload;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Materi extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FileUpload;
      
     protected $table = 'materi_kursus';
 
@@ -44,12 +45,18 @@ class Materi extends Model
 
     public function store($request): Materi
     {
+
+        if( $request->file('silabus')) {
+            $file = $request->file('silabus');
+            $silabus = $this->FileUpload($file, 'silabus');
+        }
+
         $materi = new Materi();
         $materi->kode_materi = $request->kode_materi;
         $materi->nama = $request->nama;
         $materi->deskripsi = $request->deskripsi;
         $materi->kategori = $request->kategori;
-        $materi->silabus = $request->silabus;
+        $materi->silabus = $silabus ?? null;
 
         $materi->save();
 
@@ -58,12 +65,21 @@ class Materi extends Model
     
     public function updateMateri($request): Materi
     {
+        if ($request->file('silabus')) {
+            $file = $request->file('silabus');
+            $silabus = $this->FileUpload($file, 'silabus');
+        }
+
         $materi = $this;
         $materi->kode_materi = $request->kode_materi;
         $materi->nama = $request->nama;
         $materi->deskripsi = $request->deskripsi;
         $materi->kategori = $request->kategori;
         $materi->silabus = $request->silabus;
+        
+        if (isset($silabus)) {
+            $materi->silabus = $silabus;
+        }
 
         $materi->save();
 

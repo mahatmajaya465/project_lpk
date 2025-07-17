@@ -25,6 +25,7 @@ class ProgramTransformer extends JsonResource
             'harga_rp' => $this->rupiah($this->harga),
             'harga' => $this->harga,
             'deskripsi' => $this->deskripsi,
+            'thumbnail' => $this->thumbnail ? asset("uploads/$this->thumbnail") : null
         ];
     }
 }

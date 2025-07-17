@@ -22,7 +22,7 @@ class MateriTransformer extends JsonResource
             'kategori' => $this->kategori,
             'kategori_ucfirst' => ucfirst($this->kategori),
             'silabus' => $this->silabus,
-            'silabus_url' => asset('silabus/' . $this->silabus),
+            'silabus_url' => asset('uploads/' . $this->silabus),
         ];
     }
 }

@@ -67,21 +67,24 @@ import IndexLaporanPenggajianComponent from './components/admin/laporan_penggaji
 // penggajian page component
 import IndexPenggajianComponent from './components/admin/penggajian/IndexComponent.vue';
 
+// sertifikat page component
+import IndexSertifikatComponent from './components/admin/sertifikat/IndexComponent.vue';
+
 const user = Object.freeze(window.auth?.user);
-function staffMiddleware(to, from, next) {
-  // if (['admin_staff', 'super_admin'].includes(user.roles)) {
-  next();
-  // } else {
-  // next('/');
-  // }
+function adminMiddleware(to, from, next) {
+  if (['super_admin', 'pimpinan'].includes(user.roles)) {
+    next();
+  } else {
+    next('/v1/admin');
+  }
 }
 
-function storeUserMiddleware(to, from, next) {
-  // if (['super_admin'].includes(user.roles)) {
-  next();
-  // } else {
-  // next('/v1/admin');
-  // }
+function studentMiddleware(to, from, next) {
+  if (['super_admin', 'pimpinan', 'student'].includes(user.roles)) {
+    next();
+  } else {
+    next('/v1/admin');
+  }
 }
 
 const routes = [
@@ -89,7 +92,7 @@ const routes = [
     path: '/v1/admin',
     component: DashboardComponent,
     name: 'admin.dashboard.index',
-    meta: { title: 'Dashboard', middleware: [staffMiddleware] },
+    meta: { title: 'Dashboard', middleware: [] },
   },
 
   // instruktur page
@@ -97,19 +100,19 @@ const routes = [
     path: '/v1/admin/instruktur/',
     component: IndexInstrukturComponent,
     name: "admin.instruktur.index",
-    meta: { title: 'Instruktur', middleware: [staffMiddleware] }
+    meta: { title: 'Instruktur', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/instruktur/create',
     component: CreateInstrukturComponent,
     name: "admin.instruktur.create",
-    meta: { title: 'Instruktur', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Instruktur', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/instruktur/:id',
     component: EditInstrukturComponent,
     name: "admin.instruktur.edit",
-    meta: { title: 'Instruktur', middleware: [staffMiddleware] }
+    meta: { title: 'Instruktur', middleware: [adminMiddleware] }
   },
 
   // peserta page
@@ -117,19 +120,19 @@ const routes = [
     path: '/v1/admin/peserta/',
     component: IndexPesertaComponent,
     name: "admin.peserta.index",
-    meta: { title: 'Peserta', middleware: [staffMiddleware] }
+    meta: { title: 'Peserta', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/peserta/create',
     component: CreatePesertaComponent,
     name: "admin.peserta.create",
-    meta: { title: 'Peserta', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Peserta', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/peserta/:id',
     component: EditPesertaComponent,
     name: "admin.peserta.edit",
-    meta: { title: 'Peserta', middleware: [staffMiddleware] }
+    meta: { title: 'Peserta', middleware: [adminMiddleware] }
   },
 
   // users page
@@ -137,19 +140,19 @@ const routes = [
     path: '/v1/admin/users',
     component: IndexUsersComponent,
     name: "admin.users.index",
-    meta: { title: 'Users', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Users', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/users/create',
     component: CreateUsersComponent,
     name: "admin.users.create",
-    meta: { title: 'Users', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Users', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/users/:id',
     component: EditUsersComponent,
     name: "admin.users.edit",
-    meta: { title: 'Users', middleware: [staffMiddleware] }
+    meta: { title: 'Users', middleware: [adminMiddleware] }
   },
 
   // program page
@@ -157,19 +160,19 @@ const routes = [
     path: '/v1/admin/program',
     component: IndexProgramComponent,
     name: "admin.program.index",
-    meta: { title: 'Program', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Program', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/program/create',
     component: CreateProgramComponent,
     name: "admin.program.create",
-    meta: { title: 'Program', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Program', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/program/:id',
     component: EditProgramComponent,
     name: "admin.program.edit",
-    meta: { title: 'Program', middleware: [staffMiddleware] }
+    meta: { title: 'Program', middleware: [adminMiddleware] }
   },
 
   // kelas page
@@ -177,19 +180,19 @@ const routes = [
     path: '/v1/admin/kelas',
     component: IndexKelasComponent,
     name: "admin.kelas.index",
-    meta: { title: 'Kelas', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Kelas', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/kelas/create',
     component: CreateKelasComponent,
     name: "admin.kelas.create",
-    meta: { title: 'Kelas', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Kelas', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/kelas/:id',
     component: EditKelasComponent,
     name: "admin.kelas.edit",
-    meta: { title: 'Kelas', middleware: [staffMiddleware] }
+    meta: { title: 'Kelas', middleware: [adminMiddleware] }
   },
 
   // penjadwalan page
@@ -197,7 +200,7 @@ const routes = [
     path: '/v1/admin/penjadwalan',
     component: IndexPenjadwalanComponent,
     name: "admin.penjadwalan.index",
-    meta: { title: 'Penjadwalan', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Penjadwalan', middleware: [adminMiddleware] }
   },
 
   // absensi page
@@ -205,15 +208,15 @@ const routes = [
     path: '/v1/admin/absensi',
     component: IndexAbsensiComponent,
     name: "admin.absensi.index",
-    meta: { title: 'Absensi', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Absensi', middleware: [] }
   },
-  
+
   // IndexPenilaianComponent page
   {
     path: '/v1/admin/penilaian',
     component: IndexPenilaianComponent,
     name: "admin.penilaian.index",
-    meta: { title: 'Penilaian', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Penilaian', middleware: [] }
   },
 
   // materi page
@@ -221,19 +224,19 @@ const routes = [
     path: '/v1/admin/materi',
     component: IndexMateriComponent,
     name: "admin.materi.index",
-    meta: { title: 'Materi', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Materi', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/materi/create',
     component: CreateMateriComponent,
     name: "admin.materi.create",
-    meta: { title: 'Materi', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Materi', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/materi/:id',
     component: EditMateriComponent,
     name: "admin.materi.edit",
-    meta: { title: 'Materi', middleware: [staffMiddleware] }
+    meta: { title: 'Materi', middleware: [adminMiddleware] }
   },
 
   // pembayaran page
@@ -241,19 +244,19 @@ const routes = [
     path: '/v1/admin/pembayaran/',
     component: IndexPembayaranComponent,
     name: "admin.pembayaran.index",
-    meta: { title: 'Pembayaran', middleware: [staffMiddleware] }
+    meta: { title: 'Pembayaran', middleware: [studentMiddleware] }
   },
   {
     path: '/v1/admin/pembayaran/create',
     component: CreatePembayaranComponent,
     name: "admin.pembayaran.create",
-    meta: { title: 'Pembayaran', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Pembayaran', middleware: [studentMiddleware] }
   },
   {
     path: '/v1/admin/pembayaran/:id',
     component: EditPembayaranComponent,
     name: "admin.pembayaran.edit",
-    meta: { title: 'Pembayaran', middleware: [staffMiddleware] }
+    meta: { title: 'Pembayaran', middleware: [studentMiddleware] }
   },
 
   // pendaftaran page
@@ -261,19 +264,19 @@ const routes = [
     path: '/v1/admin/pendaftaran/',
     component: IndexPendaftaranComponent,
     name: "admin.pendaftaran.index",
-    meta: { title: 'Pendaftaran', middleware: [staffMiddleware] }
+    meta: { title: 'Pendaftaran', middleware: [studentMiddleware] }
   },
   {
     path: '/v1/admin/pendaftaran/create',
     component: CreatePendaftaranComponent,
     name: "admin.pendaftaran.create",
-    meta: { title: 'Pendaftaran', middleware: [staffMiddleware, storeUserMiddleware] }
+    meta: { title: 'Pendaftaran', middleware: [studentMiddleware] }
   },
   {
     path: '/v1/admin/pendaftaran/:id',
     component: EditPendaftaranComponent,
     name: "admin.pendaftaran.edit",
-    meta: { title: 'Pendaftaran', middleware: [staffMiddleware] }
+    meta: { title: 'Pendaftaran', middleware: [studentMiddleware] }
   },
 
   // laporan page
@@ -281,25 +284,25 @@ const routes = [
     path: '/v1/admin/laporan/pendaftaran/',
     component: IndexLaporanPendaftaranComponent,
     name: "admin.laporan_pendaftaran.index",
-    meta: { title: 'Laporan Pendaftaran', middleware: [staffMiddleware] }
+    meta: { title: 'Laporan Pendaftaran', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/laporan/kelas/',
     component: IndexLaporanKelasComponent,
     name: "admin.laporan_kelas.index",
-    meta: { title: 'Laporan Kelas', middleware: [staffMiddleware] }
+    meta: { title: 'Laporan Kelas', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/laporan/pembayaran/',
     component: IndexLaporanPembayaranComponent,
     name: "admin.laporan_pembayaran.index",
-    meta: { title: 'Laporan Pembayaran', middleware: [staffMiddleware] }
+    meta: { title: 'Laporan Pembayaran', middleware: [adminMiddleware] }
   },
   {
     path: '/v1/admin/laporan/penggajian/',
     component: IndexLaporanPenggajianComponent,
     name: "admin.laporan_penggajian.index",
-    meta: { title: 'Laporan Penggajian', middleware: [staffMiddleware] }
+    meta: { title: 'Laporan Penggajian', middleware: [adminMiddleware] }
   },
 
   // penggajian page
@@ -307,7 +310,15 @@ const routes = [
     path: '/v1/admin/penggajian/',
     component: IndexPenggajianComponent,
     name: "admin.penggajian.index",
-    meta: { title: 'Penggajian', middleware: [staffMiddleware] }
+    meta: { title: 'Penggajian', middleware: [adminMiddleware] }
+  },
+
+  // sertifikat page
+  {
+    path: '/v1/admin/sertifikat/',
+    component: IndexSertifikatComponent,
+    name: "admin.sertifikat.index",
+    meta: { title: 'Sertifikat', middleware: [] }
   },
 ];
 

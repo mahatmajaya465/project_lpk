@@ -30,6 +30,7 @@ class PembayaranTransformer extends JsonResource
             'status' => $this->status,
             'status_strtoupper' => strtoupper($this->status),
             'bukti_pembayaran' => $this->bukti_pembayaran,
+            'bukti_pembayaran_url' => asset('uploads/' . $this->bukti_pembayaran),
             'metode_pembayaran' => $this->metode_pembayaran,
             'pendaftaran' => $pendaftaran,
         ];

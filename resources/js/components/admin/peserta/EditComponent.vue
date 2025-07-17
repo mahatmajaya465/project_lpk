@@ -6,7 +6,7 @@
           <div class="col">
             <!-- Page pre-title -->
             <div class="page-pretitle">Overview</div>
-            <h2 class="page-title">Edit User</h2>
+            <h2 class="page-title">Edit Peserta</h2>
           </div>
         </div>
       </div>
@@ -103,6 +103,34 @@
                           name="avatar"
                           @change="handleFileUpload"
                         />
+                        <template v-if="users.avatar">
+                          <a
+                            :href="users.avatar"
+                            target="_blank"
+                            class="input-group-text"
+                            title="Lihat Avatar"
+                          >
+                            <!-- Tabler Eye Icon -->
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="icon icon-tabler icon-tabler-eye"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="#2c3e50"
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <circle cx="12" cy="12" r="2" />
+                              <path
+                                d="M22 12c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10s10 4.477 10 10z"
+                              />
+                            </svg>
+                          </a>
+                        </template>
                       </div>
                     </div>
                   </div>

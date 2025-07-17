@@ -239,7 +239,7 @@ export default {
             horizontal: false,
           },
         },
-        colors: ["#206bc4"],
+        colors: ["#02CC1E"],
         tooltip: {
           y: {
             formatter: (value) => `${this.formatNumber(value)} orang`,
