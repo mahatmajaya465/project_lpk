@@ -84,7 +84,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
+                  <!-- <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
                       <label for="first-name-column">Kode Pembayaran</label>
                       <input
@@ -96,7 +96,7 @@
                         required
                       />
                     </div>
-                  </div>
+                  </div> -->
                   <div class="col-md-6 col-12" v-if="pembayaran.pendaftaran_id">
                     <div class="form-group mb-3">
                       <label for="last-name-column">Metode Pembayaran</label>

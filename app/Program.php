@@ -6,6 +6,7 @@ use App\Traits\FileUpload;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Program extends Model
 {
@@ -54,7 +55,8 @@ class Program extends Model
         }
 
         $program = new Program();
-        $program->kode_program = $request->kode_program;
+        // $program->kode_program = $request->kode_program;
+        $program->kode_program = "PROG-" . strtoupper(Str::random(6));
         $program->nama_program = $request->nama_program;
         $program->harga = $request->harga;
         $program->deskripsi = $request->deskripsi;
@@ -74,7 +76,7 @@ class Program extends Model
         }
 
         $program = $this;
-        $program->kode_program = $request->kode_program;
+        // $program->kode_program = $request->kode_program;
         $program->nama_program = $request->nama_program;
         $program->harga = $request->harga;
         $program->deskripsi = $request->deskripsi;

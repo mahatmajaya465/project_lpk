@@ -119,7 +119,7 @@
                           </svg>
                           Edit</router-link
                         >
-                        <button
+                        <!-- <button
                           @click="deletePembayaran(pembayaran.id)"
                           class="btn btn-outline-danger"
                           v-if="pembayaran.can_delete"
@@ -144,7 +144,7 @@
                             <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                           </svg>
                           Hapus
-                        </button>
+                        </button> -->
                       </td>
                     </tr>
                   </tbody>

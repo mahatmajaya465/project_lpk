@@ -123,7 +123,7 @@ class SertifikatController extends Controller
         $dompdf->set_option('margin_bottom', '5mm');
         $dompdf->set_option('margin_left', '5mm');
 
-        // return $pdf->stream();
+        return $pdf->stream();
 
         return $pdf->download($data['nomor_sertifikat'] . '.pdf');
     }

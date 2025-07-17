@@ -139,7 +139,8 @@
 
             <div style="text-align: justify; margin-bottom: 5mm;">
                 Telah menyelesaikan program pelatihan <span class="highlight">{{ $course['program'] }}</span>
-                yang diselenggarakan oleh <span class="highlight">{{ $institution }}</span> pada periode <span class="highlight">{{ $course['period'] }}</span> dan dinyatakan:
+                yang diselenggarakan oleh <span class="highlight">{{ $institution }}</span> pada periode <span
+                    class="highlight">{{ $course['period'] }}</span> dan dinyatakan:
             </div>
 
             <table class="course-details">
@@ -171,7 +172,10 @@
         <!-- Tanda Tangan -->
         <div class="signature-area">
             <div>Denpasar, {{ $date }}</div>
-            <div class="signature-line"></div>
+            <br>
+            <img width="80px" src="https://assets.kurasimedia.com/main/2023/11/tanfa.jpg" alt="">
+            {{-- <div class="signature-line">
+            </div> --}}
             <div style="font-weight: bold;">{{ $signature['title'] }}</div>
             {{-- <div style="margin-top: 10mm;">({{ $signature['name'] }})</div> --}}
         </div>

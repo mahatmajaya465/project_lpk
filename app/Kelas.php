@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Kelas extends Model
 {
@@ -59,7 +60,8 @@ class Kelas extends Model
     {
         $kelas = new Kelas();
         $kelas->program_kursus_id = $request->program_kursus_id;
-        $kelas->kode_kelas = $request->kode_kelas;
+        // $kelas->kode_kelas = $request->kode_kelas;
+        $kelas->kode_kelas = "KLS-" . strtoupper(Str::random(6));
         $kelas->nama_kelas = $request->nama_kelas;
         $kelas->tgl_mulai = $request->tgl_mulai;
         $kelas->tgl_selesai = $request->tgl_selesai;
@@ -77,7 +79,7 @@ class Kelas extends Model
     public function updateKelas($request): Kelas
     {
         $kelas = $this;
-        $kelas->kode_kelas = $request->kode_kelas;
+        // $kelas->kode_kelas = $request->kode_kelas;
         $kelas->nama_kelas = $request->nama_kelas;
         $kelas->tgl_mulai = $request->tgl_mulai;
         $kelas->tgl_selesai = $request->tgl_selesai;

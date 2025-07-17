@@ -8402,53 +8402,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                        Edit")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deleteInstruktur(instruktur.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                        Hapus\n                      ")])], 1)]);
+    })]), _vm._v("\n                        Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -8553,37 +8507,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.kelas.kode_kelas,
-      expression: "kelas.kode_kelas"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode kelas",
-      name: "kode_kelas",
-      required: ""
-    },
-    domProps: {
-      value: _vm.kelas.kode_kelas
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.kelas, "kode_kelas", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -8986,37 +8909,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.kelas.kode_kelas,
-      expression: "kelas.kode_kelas"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode kelas",
-      name: "kode_kelas",
-      required: ""
-    },
-    domProps: {
-      value: _vm.kelas.kode_kelas
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.kelas, "kode_kelas", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -9518,53 +9410,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                            Edit")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deleteKelas(kela.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                            Hapus\n                          ")])], 1)]);
+    })]), _vm._v("\n                            Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -10541,37 +10387,6 @@ var render = function render() {
     attrs: {
       "for": "first-name-column"
     }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.materi.kode_materi,
-      expression: "materi.kode_materi"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode materi",
-      name: "kode_materi",
-      required: ""
-    },
-    domProps: {
-      value: _vm.materi.kode_materi
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.materi, "kode_materi", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
   }, [_vm._v("Nama")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -10830,37 +10645,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.materi.kode_materi,
-      expression: "materi.kode_materi"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode materi",
-      name: "kode_materi",
-      required: ""
-    },
-    domProps: {
-      value: _vm.materi.kode_materi
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.materi, "kode_materi", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -11301,53 +11085,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                            Edit")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deleteMateri(materi.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                            Hapus\n                          ")])], 1)]);
+    })]), _vm._v("\n                            Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -11520,37 +11258,6 @@ var render = function render() {
       width: "250px"
     }
   }, [_vm._v("Biaya")]), _vm._v(" "), _c("td", [_vm._v(":")]), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.pendaftaranDetail.program.harga_rp))]), _vm._v(" "), _c("td")])])])])])])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode Pembayaran")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.pembayaran.kode_pembayaran,
-      expression: "pembayaran.kode_pembayaran"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode pembayaran",
-      name: "name",
-      required: ""
-    },
-    domProps: {
-      value: _vm.pembayaran.kode_pembayaran
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.pembayaran, "kode_pembayaran", $event.target.value);
-      }
-    }
-  })])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -11856,37 +11563,6 @@ var render = function render() {
       width: "250px"
     }
   }, [_vm._v("Biaya")]), _vm._v(" "), _c("td", [_vm._v(":")]), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.pendaftaranDetail.program.harga_rp))]), _vm._v(" "), _c("td")])])])])])])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode Pembayaran")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.pembayaran.kode_pembayaran,
-      expression: "pembayaran.kode_pembayaran"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode pembayaran",
-      name: "name",
-      required: ""
-    },
-    domProps: {
-      value: _vm.pembayaran.kode_pembayaran
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.pembayaran, "kode_pembayaran", $event.target.value);
-      }
-    }
-  })])]) : _vm._e(), _vm._v(" "), _vm.pembayaran.pendaftaran_id ? _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -12313,53 +11989,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                        Edit")]), _vm._v(" "), pembayaran.can_delete ? _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deletePembayaran(pembayaran.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                        Hapus\n                      ")]) : _vm._e()], 1)]);
+    })]), _vm._v("\n                        Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -12465,37 +12095,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode Pendaftaran")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.pendaftaran.kode_pendaftaran,
-      expression: "pendaftaran.kode_pendaftaran"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode pendaftaran",
-      name: "name",
-      required: ""
-    },
-    domProps: {
-      value: _vm.pendaftaran.kode_pendaftaran
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.pendaftaran, "kode_pendaftaran", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -12717,37 +12316,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode Pendaftaran")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.pendaftaran.kode_pendaftaran,
-      expression: "pendaftaran.kode_pendaftaran"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode pendaftaran",
-      name: "name",
-      required: ""
-    },
-    domProps: {
-      value: _vm.pendaftaran.kode_pendaftaran
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.pendaftaran, "kode_pendaftaran", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -13105,53 +12673,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                        Edit")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deletePendaftaran(pendaftaran.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                        Hapus\n                      ")])], 1)]);
+    })]), _vm._v("\n                        Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {
@@ -15180,37 +14702,6 @@ var render = function render() {
     attrs: {
       "for": "first-name-column"
     }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.program.kode_program,
-      expression: "program.kode_program"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode program",
-      name: "kode_program",
-      required: ""
-    },
-    domProps: {
-      value: _vm.program.kode_program
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.program, "kode_program", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
   }, [_vm._v("Program")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -15404,37 +14895,6 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 col-12"
-  }, [_c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "first-name-column"
-    }
-  }, [_vm._v("Kode")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.program.kode_program,
-      expression: "program.kode_program"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Kode program",
-      name: "kode_program",
-      required: ""
-    },
-    domProps: {
-      value: _vm.program.kode_program
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.program, "kode_program", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -15833,53 +15293,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                            Edit")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-outline-danger",
-      on: {
-        click: function click($event) {
-          return _vm.deleteProgram(program.id);
-        }
-      }
-    }, [_c("svg", {
-      staticClass: "icon icon-tabler icons-tabler-outline icon-tabler-trash",
-      attrs: {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    }, [_c("path", {
-      attrs: {
-        stroke: "none",
-        d: "M0 0h24v24H0z",
-        fill: "none"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M4 7l16 0"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M10 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M14 11l0 6"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-      }
-    }), _vm._v(" "), _c("path", {
-      attrs: {
-        d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-      }
-    })]), _vm._v("\n                            Hapus\n                          ")])], 1)]);
+    })]), _vm._v("\n                            Edit")])], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {

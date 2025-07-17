@@ -23,6 +23,14 @@ class JadwalTransformer extends JsonResource
             $absensi = AbsensiTransformer::collection($this->absensi->where('user_id', $user->id));
         }
 
+        $can_absen = false;
+        if (
+            date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', strtotime($this->tgl_mulai)) &&
+            date('Y-m-d H:i:s') <= date('Y-m-d H:i:s', strtotime($this->tgl_selesai))
+        ) {
+            $can_absen = true;
+        }
+
         return [
             'id' => $this->id,
             'kelas_kursus_id' => $this->kelas_kursus_id,
@@ -35,7 +43,7 @@ class JadwalTransformer extends JsonResource
             'kelas' => new KelasTransformer($this->kelas),
             'materi' => new MateriTransformer($this->materi),
             'absensi' => $absensi,
-            'can_absen' => date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', strtotime($this->tgl_mulai)) ? true : false,
+            'can_absen' => $can_absen,
         ];
     }
 }

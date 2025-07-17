@@ -18,7 +18,7 @@
             <div class="card-body">
               <form class="form" @submit.prevent="submitPendaftaranData">
                 <div class="row">
-                  <div class="col-md-6 col-12">
+                  <!-- <div class="col-md-6 col-12">
                     <div class="form-group mb-3">
                       <label for="first-name-column">Kode Pendaftaran</label>
                       <input
@@ -30,7 +30,7 @@
                         required
                       />
                     </div>
-                  </div>
+                  </div> -->
                   <div class="col-md-6 col-12">
                     <div class="form-group mb-3">
                       <label for="last-name-column">Peserta</label>

@@ -5,6 +5,7 @@ namespace App;
 use App\Traits\FileUpload;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Materi extends Model
 {
@@ -52,7 +53,8 @@ class Materi extends Model
         }
 
         $materi = new Materi();
-        $materi->kode_materi = $request->kode_materi;
+        // $materi->kode_materi = $request->kode_materi;
+        $materi->kode_materi = "MAT-" . strtoupper(Str::random(6));
         $materi->nama = $request->nama;
         $materi->deskripsi = $request->deskripsi;
         $materi->kategori = $request->kategori;
@@ -71,7 +73,7 @@ class Materi extends Model
         }
 
         $materi = $this;
-        $materi->kode_materi = $request->kode_materi;
+        // $materi->kode_materi = $request->kode_materi;
         $materi->nama = $request->nama;
         $materi->deskripsi = $request->deskripsi;
         $materi->kategori = $request->kategori;

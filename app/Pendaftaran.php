@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Pendaftaran extends Model
 {
@@ -75,7 +76,8 @@ class Pendaftaran extends Model
     {
         $pendaftaran = new Pendaftaran();
         $pendaftaran->peserta_id = $request->peserta_id;
-        $pendaftaran->kode_pendaftaran = $request->kode_pendaftaran;
+        // $pendaftaran->kode_pendaftaran = $request->kode_pendaftaran;
+        $pendaftaran->kode_pendaftaran = "PD-" . strtoupper(Str::random(6));
         $pendaftaran->program_kursus_id = $request->program_kursus_id;
         $pendaftaran->kelas_kursus_id = $request->kelas_kursus_id;
         $pendaftaran->status = $request->status ?? 'pending';
@@ -89,7 +91,7 @@ class Pendaftaran extends Model
     {
         $pendaftaran = $this;
         $pendaftaran->peserta_id = $request->peserta_id;
-        $pendaftaran->kode_pendaftaran = $request->kode_pendaftaran;
+        // $pendaftaran->kode_pendaftaran = $request->kode_pendaftaran;
         $pendaftaran->program_kursus_id = $request->program_kursus_id;
         $pendaftaran->kelas_kursus_id = $request->kelas_kursus_id;
         $pendaftaran->status = $request->status ?? 'pending';

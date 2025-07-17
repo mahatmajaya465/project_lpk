@@ -6,6 +6,7 @@ use App\Traits\FileUpload;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Pembayaran extends Model
 {
@@ -61,7 +62,7 @@ class Pembayaran extends Model
         }        
 
         $pembayaran = new Pembayaran();
-        $pembayaran->kode_pembayaran = $request->kode_pembayaran;
+        $pembayaran->kode_pembayaran = "PAY-" . strtoupper(Str::random(6));
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now();
         $pembayaran->pendaftaran_id = $request->pendaftaran_id;
         $pembayaran->nominal = $request->nominal;
@@ -92,7 +93,7 @@ class Pembayaran extends Model
         }
 
         $pembayaran = $this;
-        $pembayaran->kode_pembayaran = $request->kode_pembayaran;
+        // $pembayaran->kode_pembayaran = $request->kode_pembayaran;
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now(); 
         $pembayaran->pendaftaran_id = $request->pendaftaran_id;
         $pembayaran->nominal = $request->nominal;
