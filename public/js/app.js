@@ -2110,17 +2110,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     submitAbsensi: function submitAbsensi() {
       var _this3 = this;
-      // const targetLat = -8.69080779884201;
-      // const targetLon = 115.22630535439257;
+      var targetLat = -8.69080779884201;
+      var targetLon = 115.22630535439257;
 
-      var targetLat = -8.492812590182194;
-      var targetLon = 115.23354683814607;
+      // const targetLat = -8.492812590182194;
+      // const targetLon = 115.23354683814607;
+
       if (!this.absen.latitude || !this.absen.longitude) {
         AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
         return;
       }
       var distance = this.calculateDistance(this.absen.latitude, this.absen.longitude, targetLat, targetLon);
-      if (distance > 2000) {
+      if (distance > 2000000) {
         Swal.fire({
           title: "Lokasi tidak valid",
           text: "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",

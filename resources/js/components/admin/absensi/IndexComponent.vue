@@ -378,11 +378,11 @@ export default {
       return R * c; // Distance in meters
     },
     submitAbsensi() {
-      // const targetLat = -8.69080779884201;
-      // const targetLon = 115.22630535439257;
+      const targetLat = -8.69080779884201;
+      const targetLon = 115.22630535439257;
 
-      const targetLat = -8.492812590182194;
-      const targetLon = 115.23354683814607;
+      // const targetLat = -8.492812590182194;
+      // const targetLon = 115.23354683814607;
 
       if (!this.absen.latitude || !this.absen.longitude) {
         AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
@@ -396,7 +396,7 @@ export default {
         targetLon
       );
 
-      if (distance > 2000) {
+      if (distance > 2000000) {
         Swal.fire({
           title: "Lokasi tidak valid",
           text:

@@ -94,7 +94,7 @@ class HomeController extends Controller
                 ->map(function ($kelas) {
                     return [
                         'nama_kelas' => $kelas->nama_kelas,
-                        'peserta_count' => $kelas->peserta_count
+                        'peserta_count' => $kelas->where('status', 'active')->peserta_count
                     ];
                 });
 
