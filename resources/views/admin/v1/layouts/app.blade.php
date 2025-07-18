@@ -62,7 +62,7 @@
                         <img src="https://lkpsaraswati.com/wp-content/uploads/2020/05/LOGO-LPK.png" height="32"
                             alt="LPK Saraswati Komputer" class="navbar-brand-image">
                         <br>
-                        LPK Saraswati
+                        LKP Saraswati
                         <br>
                         Komputer
                     </a>
@@ -698,7 +698,7 @@
                             <ul class="list-inline list-inline-dots mb-0">
                                 <li class="list-inline-item">
                                     Copyright &copy; 2025
-                                    <a href="/v1/admin" class="link-secondary">LPK Saraswati Komputer</a>.
+                                    <a href="/v1/admin" class="link-secondary">LKP Saraswati Komputer</a>.
                                     All rights reserved.
                                 </li>
                                 <li class="list-inline-item">
