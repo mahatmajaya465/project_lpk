@@ -34,6 +34,12 @@ class Pembayaran extends Model
             $peserta = Peserta::where('user_id', $auth->id)->first();
             $pendaftaranIds = Pendaftaran::where('peserta_id', $peserta->id)->pluck('id');
             $pembayaran = $pembayaran->whereIn('pendaftaran_id', $pendaftaranIds);
+        } else {
+            $userAll = User::whereNull('deleted_at')
+                ->get()->pluck('id');
+            $pesertaIds = Peserta::whereIn('user_id', $userAll)->pluck('id');
+            $pendaftaranIds = Pendaftaran::whereIn('peserta_id', $pesertaIds)->pluck('id');
+            $pembayaran = $pembayaran->whereIn('pendaftaran_id', $pendaftaranIds);
         }
 
         $search = $request->search;
@@ -47,7 +53,7 @@ class Pembayaran extends Model
             });
         }
 
-        if($request->status) {
+        if ($request->status) {
             $pembayaran = $pembayaran->where('status', $request->status);
         }
 
@@ -63,7 +69,7 @@ class Pembayaran extends Model
         if ($request->file('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
             $buktiPembayaran = $this->FileUpload($file, 'bukti_pembayaran');
-        }        
+        }
 
         $pembayaran = new Pembayaran();
         $pembayaran->kode_pembayaran = "PAY-" . strtoupper(Str::random(6));
@@ -98,7 +104,7 @@ class Pembayaran extends Model
 
         $pembayaran = $this;
         // $pembayaran->kode_pembayaran = $request->kode_pembayaran;
-        $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now(); 
+        $pembayaran->tgl_pembayaran = $request->tgl_pembayaran ?? now();
         $pembayaran->pendaftaran_id = $request->pendaftaran_id;
         $pembayaran->nominal = $request->nominal;
         $pembayaran->status = $request->status ?? 'pending';

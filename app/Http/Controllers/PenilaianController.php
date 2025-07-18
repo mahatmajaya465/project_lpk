@@ -29,8 +29,13 @@ class PenilaianController extends Controller
 
         // Dapatkan semua peserta yang terdaftar di kelas ini
         $pesertaKelas = Pendaftaran::where('kelas_kursus_id', $kelas_id)
-            ->where('status', 'settlement')
-            ->get();
+            ->where('status', 'settlement');
+
+        $userAll = User::whereNull('deleted_at')
+            ->get()->pluck('id');
+        $pesertaKelas = $pesertaKelas->whereIn('peserta_id', Peserta::whereIn('user_id', $userAll)->pluck('id'));
+
+        $pesertaKelas = $pesertaKelas->get();
 
         if ($pesertaKelas->isEmpty()) {
             return response()->json(['message' => 'Tidak ada peserta di kelas ini'], 404);
