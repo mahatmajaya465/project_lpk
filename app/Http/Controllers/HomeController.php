@@ -67,6 +67,7 @@ class HomeController extends Controller
 
             // Participants per class
             $kelasWithPeserta = Kelas::withCount('peserta')
+                ->where('status', 'active')
                 ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
                 ->get()
                 ->map(function ($kelas) {
@@ -77,8 +78,8 @@ class HomeController extends Controller
                 });
 
             // Participants per program
-            $programsWithClasses = Program::whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())->with(['kelas' => function ($query) {
-                $query->withCount('peserta');
+            $programsWithClasses = Program::where('status', 'active')->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())->with(['kelas' => function ($query) {
+                $query->where('status', 'active')->withCount('peserta');
             }])->get()->map(function ($program) {
                 return [
                     'nama_program' => $program->nama_program,

@@ -59,6 +59,20 @@
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group mb-3">
+                      <label for="first-name-column">Status</label>
+                      <select
+                        name="status"
+                        id="status"
+                        v-model="program.status"
+                        class="form-control"
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mb-3">
                       <label for="first-name-column">Thumbnail</label>
                       <div class="input-group">
                         <input

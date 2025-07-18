@@ -2113,36 +2113,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // const targetLat = -8.69080779884201;
       // const targetLon = 115.22630535439257;
 
-      // if (!this.absen.latitude || !this.absen.longitude) {
-      //   AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
-      //   return;
-      // }
-
-      // const distance = this.calculateDistance(
-      //   this.absen.latitude,
-      //   this.absen.longitude,
-      //   targetLat,
-      //   targetLon
-      // );
-
-      // if (distance > 100) {
-      //   Swal.fire({
-      //     title: "Lokasi tidak valid",
-      //     text:
-      //       "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
-      //     icon: "warning",
-      //     confirmButtonColor: "#3085d6",
-      //     cancelButtonColor: "#d33",
-      //     confirmButtonText: "Ok",
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       return;
-      //     }
-      //   });
-
-      //   return;
-      // }
-
+      var targetLat = -8.492812590182194;
+      var targetLon = 115.23354683814607;
+      if (!this.absen.latitude || !this.absen.longitude) {
+        AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
+        return;
+      }
+      var distance = this.calculateDistance(this.absen.latitude, this.absen.longitude, targetLat, targetLon);
+      if (distance > 100) {
+        Swal.fire({
+          title: "Lokasi tidak valid",
+          text: "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ok"
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            return;
+          }
+        });
+        return;
+      }
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/absensi/store", _objectSpread(_objectSpread({}, this.absen), this.penjadwalan)).then(function (response) {
         var data = response.data;
         AlertMsg(data.message, data.error);
@@ -8752,6 +8744,45 @@ var render = function render() {
       }
     }
   })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 col-12"
+  }, [_c("div", {
+    staticClass: "form-group mb-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "first-name-column"
+    }
+  }, [_vm._v("Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.kelas.status,
+      expression: "kelas.status"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "status",
+      id: "status"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.kelas, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "active"
+    }
+  }, [_vm._v("Active")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inactive"
+    }
+  }, [_vm._v("Inactive")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -9154,6 +9185,45 @@ var render = function render() {
       }
     }
   })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 col-12"
+  }, [_c("div", {
+    staticClass: "form-group mb-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "first-name-column"
+    }
+  }, [_vm._v("Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.kelas.status,
+      expression: "kelas.status"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "status",
+      id: "status"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.kelas, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "active"
+    }
+  }, [_vm._v("Active")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inactive"
+    }
+  }, [_vm._v("Inactive")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"
@@ -14792,6 +14862,45 @@ var render = function render() {
     attrs: {
       "for": "first-name-column"
     }
+  }, [_vm._v("Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.program.status,
+      expression: "program.status"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "status",
+      id: "status"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.program, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "active"
+    }
+  }, [_vm._v("Active")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inactive"
+    }
+  }, [_vm._v("Inactive")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 col-12"
+  }, [_c("div", {
+    staticClass: "form-group mb-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "first-name-column"
+    }
   }, [_vm._v("Thumbnail")]), _vm._v(" "), _c("div", {
     staticClass: "input-group"
   }, [_c("input", {
@@ -14985,6 +15094,45 @@ var render = function render() {
       }
     }
   })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 col-12"
+  }, [_c("div", {
+    staticClass: "form-group mb-3"
+  }, [_c("label", {
+    attrs: {
+      "for": "first-name-column"
+    }
+  }, [_vm._v("Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.program.status,
+      expression: "program.status"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "status",
+      id: "status"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.program, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "active"
+    }
+  }, [_vm._v("Active")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inactive"
+    }
+  }, [_vm._v("Inactive")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 col-12"
   }, [_c("div", {
     staticClass: "form-group mb-3"

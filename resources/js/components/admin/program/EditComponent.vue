@@ -59,6 +59,20 @@
                   </div>
                   <div class="col-md-6 col-12">
                     <div class="form-group mb-3">
+                      <label for="first-name-column">Status</label>
+                      <select
+                        name="status"
+                        id="status"
+                        v-model="program.status"
+                        class="form-control"
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mb-3">
                       <label for="first-name-column">Thumbnail</label>
                       <div class="input-group">
                         <input
@@ -102,7 +116,10 @@
                   <div class="col-md-12 col-12">
                     <div class="form-group mb-3">
                       <label for="last-name-column">Deskripsi</label>
-                      <textarea id="tinymce-mytextarea" v-model="program.deskripsi"></textarea>
+                      <textarea
+                        id="tinymce-mytextarea"
+                        v-model="program.deskripsi"
+                      ></textarea>
                     </div>
                   </div>
                   <div class="col-12 d-flex justify-content-end mt-4">
@@ -201,9 +218,7 @@ export default {
           this.$nextTick(() => {
             this.initTinyMCE();
             tinyMCE.on("AddEditor", () => {
-              tinyMCE
-                .get("tinymce-mytextarea")
-                .setContent(this.program.deskripsi || "");
+              tinyMCE.get("tinymce-mytextarea").setContent(this.program.deskripsi || "");
             });
           });
         });

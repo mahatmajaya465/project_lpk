@@ -381,35 +381,38 @@ export default {
       // const targetLat = -8.69080779884201;
       // const targetLon = 115.22630535439257;
 
-      // if (!this.absen.latitude || !this.absen.longitude) {
-      //   AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
-      //   return;
-      // }
+      const targetLat = -8.492812590182194;
+      const targetLon = 115.23354683814607;
 
-      // const distance = this.calculateDistance(
-      //   this.absen.latitude,
-      //   this.absen.longitude,
-      //   targetLat,
-      //   targetLon
-      // );
+      if (!this.absen.latitude || !this.absen.longitude) {
+        AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
+        return;
+      }
 
-      // if (distance > 100) {
-      //   Swal.fire({
-      //     title: "Lokasi tidak valid",
-      //     text:
-      //       "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
-      //     icon: "warning",
-      //     confirmButtonColor: "#3085d6",
-      //     cancelButtonColor: "#d33",
-      //     confirmButtonText: "Ok",
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       return;
-      //     }
-      //   });
+      const distance = this.calculateDistance(
+        this.absen.latitude,
+        this.absen.longitude,
+        targetLat,
+        targetLon
+      );
 
-      //   return;
-      // }
+      if (distance > 100) {
+        Swal.fire({
+          title: "Lokasi tidak valid",
+          text:
+            "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            return;
+          }
+        });
+
+        return;
+      }
 
       axios
         .post("/v1/absensi/store", {
