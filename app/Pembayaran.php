@@ -51,6 +51,10 @@ class Pembayaran extends Model
             $pembayaran = $pembayaran->where('status', $request->status);
         }
 
+        if ($request->start && $request->end) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$request->start, $request->end]);
+        }
+
         return $pembayaran->paginate(100);
     }
 

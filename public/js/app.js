@@ -9886,20 +9886,40 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.filter.periode,
-      expression: "filter.periode"
+      value: _vm.filter.start,
+      expression: "filter.start"
     }],
     staticClass: "form-control",
     attrs: {
-      type: "month"
+      type: "date"
     },
     domProps: {
-      value: _vm.filter.periode
+      value: _vm.filter.start
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "periode", $event.target.value);
+        _vm.$set(_vm.filter, "start", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.end,
+      expression: "filter.end"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.end
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "end", $event.target.value);
       }
     }
   }), _vm._v(" "), _c("button", {

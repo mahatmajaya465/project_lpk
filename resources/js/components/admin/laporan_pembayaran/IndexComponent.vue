@@ -51,7 +51,8 @@
               <div class="d-flex mb-3 justify-content-end">
                 <form @submit.prevent="fetchPembayaranData">
                   <div class="input-group">
-                    <input type="month" class="form-control" v-model="filter.periode" />
+                  <input type="date" class="form-control" v-model="filter.start" />
+                    <input type="date" class="form-control" v-model="filter.end" />
                     <button class="btn" type="submit" style="height: 36px">Go!</button>
                   </div>
                 </form>
