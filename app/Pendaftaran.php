@@ -42,10 +42,14 @@ class Pendaftaran extends Model
 
         $pendaftaran = $this->whereNull('deleted_at');
 
+        $pesertaAll = Peserta::all()->pluck('id')->toArray();
+
         if ($auth->roles == 'student') {
             $peserta = Peserta::where('user_id', $auth->id)->first();
             $pendaftaran = $pendaftaran->where('peserta_id', $peserta->id);
         }
+
+        $pendaftaran = $pendaftaran->whereIn('peserta_id', $pesertaAll);
 
         $search = $request->search;
 
