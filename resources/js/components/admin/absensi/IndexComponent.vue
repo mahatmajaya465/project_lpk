@@ -397,7 +397,7 @@ export default {
         targetLon
       );
 
-      if (distance > 2000000) {
+      if (distance > 2000) {
         Swal.fire({
           title: "Lokasi tidak valid",
           text:
