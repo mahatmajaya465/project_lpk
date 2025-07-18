@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Kelas;
 use App\Penilaian;
+use App\User;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -20,6 +21,9 @@ class SertifikatController extends Controller
 
     public function list(Request $request)
     {
+        $userAll = User::whereNull('deleted_at')
+            ->get()->pluck('id');
+            
         $query = Penilaian::with(['user', 'program', 'kelas'])
             ->select(
                 'user_id',
@@ -30,7 +34,8 @@ class SertifikatController extends Controller
             )
             ->where('program_id', $request->program_id)
             ->where('kelas_kursus_id', $request->kelas_id)
-            ->groupBy('user_id', 'program_id', 'kelas_kursus_id');
+            ->groupBy('user_id', 'program_id', 'kelas_kursus_id')
+            ->whereIn('user_id', $userAll);
 
         if (auth()->user()->roles == 'student') {
             $userId = auth()->user()->id;
