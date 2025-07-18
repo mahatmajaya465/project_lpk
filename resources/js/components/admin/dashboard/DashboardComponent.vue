@@ -76,7 +76,8 @@
                 >
                   <div class="card mb-3">
                     <div class="card-body">
-                      <h3 class="card-title">Pembayaran Diterima</h3>
+                      <h3 class="card-title" v-if="user.roles == 'super_admin'">Pembayaran Diterima</h3>
+                      <h3 class="card-title" v-else>Pembayaran</h3>
                       <div>
                         <h5 class="font-extrabold mb-0">
                           {{ formatCurrency(analysis.pembayaran_diterima) }}

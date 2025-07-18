@@ -7310,9 +7310,11 @@ var render = function render() {
     staticClass: "card mb-3"
   }, [_c("div", {
     staticClass: "card-body"
-  }, [_c("h3", {
+  }, [_vm.user.roles == "super_admin" ? _c("h3", {
     staticClass: "card-title"
-  }, [_vm._v("Pembayaran Diterima")]), _vm._v(" "), _c("div", [_c("h5", {
+  }, [_vm._v("Pembayaran Diterima")]) : _c("h3", {
+    staticClass: "card-title"
+  }, [_vm._v("Pembayaran")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
   }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.pembayaran_diterima)) + "\n                      ")])])])])])], 1) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" || _vm.user.roles === "instruktur" ? _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
