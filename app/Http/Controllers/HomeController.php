@@ -8,6 +8,7 @@ use App\Pembayaran;
 use App\Peserta;
 use App\Program;
 use App\Traits\FormatRupiah;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -40,8 +41,10 @@ class HomeController extends Controller
         try {
             $periode = $request->periode ?? date('Y-m');
 
+            $userAll = User::whereNull('deleted_at')->get()->pluck('id');
+
             // Active participants count (created_at <= akhir bulan dari periode)
-            $peserta_aktif = Peserta::where('status', 'active')
+            $peserta_aktif = Peserta::where('status', 'active')->whereIn('user_id', $userAll)
                 ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth());
             if (auth()->user()->roles != 'super_admin') {
                 $peserta_aktif->where('user_id', auth()->user()->id);
@@ -76,7 +79,7 @@ class HomeController extends Controller
 
             // Instructor salaries (filter by periode)
             $gaji_instruktur = 0;
-            if( auth()->user()->roles != 'super_admin') {
+            if (auth()->user()->roles != 'super_admin') {
                 $instruktur = Instruktur::where('user_id', auth()->user()->id)->get();
             } else {
                 $instruktur = Instruktur::all();
