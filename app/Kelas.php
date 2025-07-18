@@ -81,6 +81,7 @@ class Kelas extends Model
         $kelas = $this;
         // $kelas->kode_kelas = $request->kode_kelas;
         $kelas->nama_kelas = $request->nama_kelas;
+        $kelas->program_kursus_id = $request->program_kursus_id;
         $kelas->tgl_mulai = $request->tgl_mulai;
         $kelas->tgl_selesai = $request->tgl_selesai;
         $kelas->jumlah_peserta = $request->jumlah_peserta;
