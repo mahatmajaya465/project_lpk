@@ -14671,7 +14671,7 @@ var render = function render() {
       attrs: {
         d: "M13.5 6.5l4 4"
       }
-    })]), _vm._v("\n                        Edit")]), _vm._v(" "), _c("button", {
+    })]), _vm._v("\n                        Edit")]), _vm._v(" "), peserta.can_delete ? _c("button", {
       staticClass: "btn btn-outline-danger",
       on: {
         click: function click($event) {
@@ -14717,7 +14717,7 @@ var render = function render() {
       attrs: {
         d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
       }
-    })]), _vm._v("\n                        Hapus\n                      ")])], 1)]);
+    })]), _vm._v("\n                        Hapus\n                      ")]) : _vm._e()], 1)]);
   }), 0)])]), _vm._v(" "), _c("nav", {
     staticClass: "mt-4",
     attrs: {

@@ -112,6 +112,7 @@
                           Edit</router-link
                         >
                         <button
+                          v-if="peserta.can_delete"
                           @click="deletePeserta(peserta.id)"
                           class="btn btn-outline-danger"
                         >
