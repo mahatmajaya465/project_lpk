@@ -92,9 +92,11 @@ class HomeController extends Controller
                 ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
                 ->get()
                 ->map(function ($kelas) {
+                    // count kelas with peserta avtive
+                    $kelas->peserta_count = $kelas->peserta()->where('peserta.status', 'active')->count();
                     return [
                         'nama_kelas' => $kelas->nama_kelas,
-                        'peserta_count' => $kelas->where('status', 'active')->peserta_count
+                        'peserta_count' => $kelas->peserta_count
                     ];
                 });
 
