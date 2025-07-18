@@ -2120,7 +2120,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return;
       }
       var distance = this.calculateDistance(this.absen.latitude, this.absen.longitude, targetLat, targetLon);
-      if (distance > 100) {
+      if (distance > 2000) {
         Swal.fire({
           title: "Lokasi tidak valid",
           text: "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
