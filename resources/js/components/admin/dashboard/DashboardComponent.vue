@@ -209,6 +209,8 @@ export default {
         Swal.close();
       } catch (error) {
         AlertMsg(error.response.data.message, true);
+      } finally {
+        Swal.close();
       }
     },
     renderKelasChart() {

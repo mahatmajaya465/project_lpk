@@ -2274,10 +2274,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.t0 = _context["catch"](1);
               AlertMsg(_context.t0.response.data.message, true);
             case 13:
+              _context.prev = 13;
+              Swal.close();
+              return _context.finish(13);
+            case 16:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[1, 10]]);
+        }, _callee, null, [[1, 10, 13, 16]]);
       }))();
     },
     renderKelasChart: function renderKelasChart() {
