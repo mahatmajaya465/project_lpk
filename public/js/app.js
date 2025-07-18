@@ -2110,28 +2110,39 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     submitAbsensi: function submitAbsensi() {
       var _this3 = this;
-      var targetLat = -8.69080779884201;
-      var targetLon = 115.22630535439257;
-      if (!this.absen.latitude || !this.absen.longitude) {
-        AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
-        return;
-      }
-      var distance = this.calculateDistance(this.absen.latitude, this.absen.longitude, targetLat, targetLon);
-      if (distance > 100) {
-        Swal.fire({
-          title: "Lokasi tidak valid",
-          text: "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
-          icon: "warning",
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ok"
-        }).then(function (result) {
-          if (result.isConfirmed) {
-            return;
-          }
-        });
-        return;
-      }
+      // const targetLat = -8.69080779884201;
+      // const targetLon = 115.22630535439257;
+
+      // if (!this.absen.latitude || !this.absen.longitude) {
+      //   AlertMsg("Lokasi tidak valid. Silakan coba lagi.", true);
+      //   return;
+      // }
+
+      // const distance = this.calculateDistance(
+      //   this.absen.latitude,
+      //   this.absen.longitude,
+      //   targetLat,
+      //   targetLon
+      // );
+
+      // if (distance > 100) {
+      //   Swal.fire({
+      //     title: "Lokasi tidak valid",
+      //     text:
+      //       "Anda harus berada dalam radius 100 meter dari lokasi yang ditentukan untuk absen.",
+      //     icon: "warning",
+      //     confirmButtonColor: "#3085d6",
+      //     cancelButtonColor: "#d33",
+      //     confirmButtonText: "Ok",
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       return;
+      //     }
+      //   });
+
+      //   return;
+      // }
+
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/v1/absensi/store", _objectSpread(_objectSpread({}, this.absen), this.penjadwalan)).then(function (response) {
         var data = response.data;
         AlertMsg(data.message, data.error);
