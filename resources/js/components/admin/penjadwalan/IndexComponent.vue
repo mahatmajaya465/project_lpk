@@ -100,6 +100,7 @@
                             <button
                               @click="deleteJadwal(jadwal.id)"
                               class="btn btn-outline-danger"
+                              v-if="jadwal.can_delete"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

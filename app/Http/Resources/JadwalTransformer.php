@@ -44,6 +44,7 @@ class JadwalTransformer extends JsonResource
             'instruktur' => new InstrukturTransformer($this->instruktur),
             'kelas' => new KelasTransformer($this->kelas),
             'materi' => new MateriTransformer($this->materi),
+            'can_delete' => date('Y-m-d H:i:s') < date('Y-m-d H:i:s', strtotime($this->tgl_mulai)),
             'absensi' => $absensi,
             'can_absen' => $can_absen,
             'clock_in' => $clock_in ? true : false
