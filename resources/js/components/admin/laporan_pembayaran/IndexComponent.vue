@@ -177,7 +177,7 @@ export default {
 
       // Hitung total pembayaran
       const totalPembayaran = this.pembayarans.reduce((sum, pembayaran) => {
-        return sum + (pembayaran.nominal || 0);
+        return sum + (parseInt(pembayaran.nominal) || 0);
       }, 0);
 
       // Ambil HTML yang ingin dicetak

@@ -42,24 +42,45 @@ class HomeController extends Controller
 
             // Active participants count (created_at <= akhir bulan dari periode)
             $peserta_aktif = Peserta::where('status', 'active')
-                ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
-                ->count();
+                ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth());
+            if (auth()->user()->roles != 'super_admin') {
+                $peserta_aktif->where('user_id', auth()->user()->id);
+            }
+            $peserta_aktif = $peserta_aktif->count();
 
             // Active classes count (created_at <= akhir bulan dari periode)
-            $kelas_aktif = Kelas::where('status', 'active')
-                ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
-                ->count();
+            $kelas_aktif = 0;
+            if (auth()->user()->roles == 'super_admin') {
+                $kelas_aktif = Kelas::where('status', 'active')
+                    ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
+                    ->count();
+            } else {
+                $kelas_aktif = Kelas::where('status', 'active')
+                    ->whereDate('created_at', '<=', Carbon::parse($periode)->endOfMonth())
+                    ->whereHas('peserta', function ($query) {
+                        $query->where('user_id', auth()->user()->id);
+                    })->count();
+            }
 
             // Payments received (filter by periode if provided)
             $pembayaranQuery = Pembayaran::where('status', 'settlement');
             if ($periode) {
                 $pembayaranQuery->where('created_at', 'like', "$periode%");
             }
+            if (auth()->user()->roles != 'super_admin') {
+                $peserta = Peserta::where('user_id', auth()->user()->id)->first();
+                $pendaftaranIds = $peserta ? $peserta->pendaftaran->pluck('id') : [];
+                $pembayaranQuery->whereIn('pendaftaran_id', $pendaftaranIds);
+            }
             $pembayaran = $pembayaranQuery->sum('nominal');
 
             // Instructor salaries (filter by periode)
             $gaji_instruktur = 0;
-            $instruktur = Instruktur::all();
+            if( auth()->user()->roles != 'super_admin') {
+                $instruktur = Instruktur::where('user_id', auth()->user()->id)->get();
+            } else {
+                $instruktur = Instruktur::all();
+            }
             foreach ($instruktur as $item) {
                 $gaji = $item->getGajiInstruktur($item, $periode);
                 $gaji_instruktur += $gaji['totalGaji'];

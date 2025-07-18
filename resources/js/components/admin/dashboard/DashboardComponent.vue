@@ -26,7 +26,7 @@
           <div class="col-12 col-lg-12">
             <div class="row">
               <!-- Stats Cards -->
-              <div class="col-12 col-lg-3 col-md-12">
+              <div class="col-12 col-lg-3 col-md-12" v-if="user.roles === 'super_admin'">
                 <router-link
                   class="text-decoration-none"
                   :to="{
@@ -46,7 +46,7 @@
                   </div>
                 </router-link>
               </div>
-              <div class="col-12 col-lg-3 col-md-12">
+              <div class="col-12 col-lg-3 col-md-12" v-if="user.roles === 'super_admin' || user.roles === 'student'">
                 <router-link
                   class="text-decoration-none"
                   :to="{
@@ -66,7 +66,7 @@
                   </div>
                 </router-link>
               </div>
-              <div class="col-12 col-lg-3 col-md-12">
+              <div class="col-12 col-lg-3 col-md-12" v-if="user.roles === 'super_admin' || user.roles === 'student'">
                 <router-link
                   class="text-decoration-none"
                   :to="{
@@ -86,7 +86,7 @@
                   </div>
                 </router-link>
               </div>
-              <div class="col-12 col-lg-3 col-md-12">
+              <div class="col-12 col-lg-3 col-md-12" v-if="user.roles === 'super_admin' || user.roles === 'instruktur'">
                 <router-link
                   class="text-decoration-none"
                   :to="{
@@ -108,7 +108,7 @@
               </div>
 
               <!-- Charts -->
-              <div class="col-12 col-lg-6 col-md-12">
+              <div class="col-12 col-lg-6 col-md-12" v-if="user.roles === 'super_admin'">
                 <div class="card">
                   <div class="card-body">
                     <h3 class="card-title">Peserta Per Kelas</h3>
@@ -122,7 +122,7 @@
               </div>
 
               <!-- Program Table -->
-              <div class="col-12 col-lg-6 col-md-12">
+              <div class="col-12 col-lg-6 col-md-12" v-if="user.roles === 'super_admin'">
                 <div class="card">
                   <div class="card-body">
                     <h3 class="card-title">Peserta dalam Program</h3>
@@ -187,6 +187,7 @@ export default {
         peserta_per_program: [],
       },
       chart: null,
+      user: this.$user
     };
   },
   mounted() {

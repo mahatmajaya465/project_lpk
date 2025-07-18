@@ -22,6 +22,11 @@ class Peserta extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function pendaftaran()
+    {
+        return $this->hasMany(Pendaftaran::class, 'peserta_id');
+    }
+
     public function list($request): LengthAwarePaginator
     {
         $auth = auth()->user();

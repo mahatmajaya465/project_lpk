@@ -2233,7 +2233,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         },
         peserta_per_program: []
       },
-      chart: null
+      chart: null,
+      user: this.$user
     };
   },
   mounted: function mounted() {
@@ -3269,7 +3270,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // Hitung total pembayaran
       var totalPembayaran = this.pembayarans.reduce(function (sum, pembayaran) {
-        return sum + (pembayaran.nominal || 0);
+        return sum + (parseInt(pembayaran.nominal) || 0);
       }, 0);
 
       // Ambil HTML yang ingin dicetak
@@ -7250,7 +7251,7 @@ var render = function render() {
     staticClass: "col-12 col-lg-12"
   }, [_c("div", {
     staticClass: "row"
-  }, [_c("div", {
+  }, [_vm.user.roles === "super_admin" ? _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -7271,7 +7272,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Peserta Aktif")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.peserta_aktif)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.peserta_aktif)) + "\n                      ")])])])])])], 1) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" || _vm.user.roles === "student" ? _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -7292,7 +7293,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Kelas Aktif")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.kelas_aktif)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatNumber(_vm.analysis.kelas_aktif)) + "\n                      ")])])])])])], 1) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" || _vm.user.roles === "student" ? _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -7313,7 +7314,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Pembayaran Diterima")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.pembayaran_diterima)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.pembayaran_diterima)) + "\n                      ")])])])])])], 1) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" || _vm.user.roles === "instruktur" ? _c("div", {
     staticClass: "col-12 col-lg-3 col-md-12"
   }, [_c("router-link", {
     staticClass: "text-decoration-none",
@@ -7334,7 +7335,7 @@ var render = function render() {
     staticClass: "card-title"
   }, [_vm._v("Gaji Instruktur")]), _vm._v(" "), _c("div", [_c("h5", {
     staticClass: "font-extrabold mb-0"
-  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.gaji_instruktur)) + "\n                      ")])])])])])], 1), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        " + _vm._s(_vm.formatCurrency(_vm.analysis.gaji_instruktur)) + "\n                      ")])])])])])], 1) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" ? _c("div", {
     staticClass: "col-12 col-lg-6 col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -7350,7 +7351,7 @@ var render = function render() {
     attrs: {
       id: "kelas-chart"
     }
-  })])])]), _vm._v(" "), _c("div", {
+  })])])]) : _vm._e(), _vm._v(" "), _vm.user.roles === "super_admin" ? _c("div", {
     staticClass: "col-12 col-lg-6 col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -7376,7 +7377,7 @@ var render = function render() {
         key: kelas.nama_kelas
       }, [_vm._v("\n                                  " + _vm._s(kelas.nama_kelas) + " :\n                                  " + _vm._s(_vm.formatNumber(kelas.peserta_count)) + " orang\n                                ")]);
     }), 0)])]);
-  }), 0)])])])])])])])])])])])]);
+  }), 0)])])])])])]) : _vm._e()])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
