@@ -31,6 +31,8 @@ class JadwalTransformer extends JsonResource
             $can_absen = true;
         }
 
+        $clock_in = $this->absensi->where('user_id', $user->id)->where('type', 'clock_in')->first() ?? null;
+
         return [
             'id' => $this->id,
             'kelas_kursus_id' => $this->kelas_kursus_id,
@@ -44,6 +46,7 @@ class JadwalTransformer extends JsonResource
             'materi' => new MateriTransformer($this->materi),
             'absensi' => $absensi,
             'can_absen' => $can_absen,
+            'clock_in' => $clock_in ? true : false
         ];
     }
 }

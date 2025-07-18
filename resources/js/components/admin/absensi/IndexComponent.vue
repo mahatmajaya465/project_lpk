@@ -45,7 +45,7 @@
                           </td>
                           <td style="text-wrap: nowrap">
                             <button
-                              @click="absensiKelas(jadwal.id)"
+                              @click="absensiKelas(jadwal.id, jadwal.clock_in)"
                               :class="{
                                 'btn btn-outline-primary': true,
                                 disabled: !jadwal.can_absen,
@@ -174,8 +174,8 @@
               <div class="mb-3">
                 <label class="form-label">Tipe Absensi</label>
                 <select class="form-select" v-model="absen.type">
-                  <option value="clock_in">Clock In</option>
-                  <option value="clock_out">Clock Out</option>
+                  <option v-if="!absen.clock_in" value="clock_in">Clock In</option>
+                  <option v-if="absen.clock_in" value="clock_out">Clock Out</option>
                 </select>
               </div>
 
@@ -309,6 +309,7 @@ export default {
         longitude: "",
         lokasi: "",
         type: "clock_in", // Default type for absensi
+        clock_in: false, // Will be set based on the jadwal data
       },
       user: this.$user,
     };
@@ -449,7 +450,7 @@ export default {
         AlertMsg(error.response.data.message, true);
       }
     },
-    absensiKelas(id) {
+    absensiKelas(id, clock_in = false) {
       this.showAbsenModal = true;
       const now = new Date();
       const offsetWITA = 16 * 60 * 60 * 1000; // UTC+8 (WITA)
@@ -459,6 +460,8 @@ export default {
 
       this.absen.tanggal = nowWITA.toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
       this.penjadwalan.id = id;
+      this.absen.clock_in = clock_in;
+      this.absen.type = clock_in ? "clock_out" : "clock_in";
     },
   },
 };

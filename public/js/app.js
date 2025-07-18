@@ -2013,7 +2013,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         latitude: "",
         longitude: "",
         lokasi: "",
-        type: "clock_in" // Default type for absensi
+        type: "clock_in",
+        // Default type for absensi
+        clock_in: false // Will be set based on the jadwal data
       },
       user: this.$user
     };
@@ -2183,12 +2185,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     absensiKelas: function absensiKelas(id) {
+      var clock_in = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       this.showAbsenModal = true;
       var now = new Date();
       var offsetWITA = 16 * 60 * 60 * 1000; // UTC+8 (WITA)
       var nowWITA = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + offsetWITA);
       this.absen.tanggal = nowWITA.toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
       this.penjadwalan.id = id;
+      this.absen.clock_in = clock_in;
+      this.absen.type = clock_in ? "clock_out" : "clock_in";
     }
   }
 });
@@ -6842,7 +6847,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.absensiKelas(jadwal.id);
+          return _vm.absensiKelas(jadwal.id, jadwal.clock_in);
         }
       }
     }, [_c("svg", {
@@ -7035,15 +7040,15 @@ var render = function render() {
         _vm.$set(_vm.absen, "type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
       }
     }
-  }, [_c("option", {
+  }, [!_vm.absen.clock_in ? _c("option", {
     attrs: {
       value: "clock_in"
     }
-  }, [_vm._v("Clock In")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("Clock In")]) : _vm._e(), _vm._v(" "), _vm.absen.clock_in ? _c("option", {
     attrs: {
       value: "clock_out"
     }
-  }, [_vm._v("Clock Out")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Clock Out")]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "mb-3"
   }, [_c("label", {
     staticClass: "form-label"
