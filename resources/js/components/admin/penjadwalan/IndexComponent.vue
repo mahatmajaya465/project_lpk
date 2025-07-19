@@ -191,25 +191,45 @@
 
           <div class="modal-body">
             <form @submit.prevent="submitForm">
+              <!-- Input Tanggal -->
               <div class="mb-3">
-                <label class="form-label">Tanggal Mulai</label>
+                <label class="form-label">Tanggal</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   class="form-control"
-                  v-model="penjadwalan.tgl_mulai"
+                  v-model="penjadwalan.tanggal"
                   required
+                  @change="updateWaktu"
                 />
               </div>
 
+              <!-- Input Jam Mulai -->
               <div class="mb-3">
-                <label class="form-label">Tanggal Selesai</label>
+                <label class="form-label">Jam Mulai</label>
                 <input
-                  type="datetime-local"
+                  type="time"
                   class="form-control"
-                  v-model="penjadwalan.tgl_selesai"
+                  v-model="penjadwalan.jam_mulai"
                   required
+                  @change="updateWaktu"
                 />
               </div>
+
+              <!-- Input Jam Selesai -->
+              <div class="mb-3">
+                <label class="form-label">Jam Selesai</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  v-model="penjadwalan.jam_selesai"
+                  required
+                  @change="updateWaktu"
+                />
+              </div>
+
+              <!-- Field tersembunyi untuk format asli -->
+              <input type="hidden" v-model="penjadwalan.tgl_mulai" />
+              <input type="hidden" v-model="penjadwalan.tgl_selesai" />
 
               <div class="mb-3">
                 <label class="form-label">Materi</label>
@@ -262,7 +282,15 @@ export default {
   data() {
     return {
       jadwals: [],
-      penjadwalan: {},
+      penjadwalan: {
+        tanggal: "", // Untuk input date
+        jam_mulai: "08:00", // Default jam mulai
+        jam_selesai: "10:00", // Default jam selesai
+        tgl_mulai: "", // Untuk backend (format datetime)
+        tgl_selesai: "", // Untuk backend (format datetime)
+        materi_id: "",
+        instruktur_id: "",
+      },
       links: {},
       meta: {},
       materis: [],
@@ -282,12 +310,27 @@ export default {
     truncateText,
     showModalPenjadwalan() {
       this.showModal = true;
-      this.penjadwalan = {
-        tgl_mulai: "",
-        tgl_selesai: "",
-        materi_id: "",
-        instruktur_id: "",
-      };
+      const now = new Date();
+
+      // Set tanggal hari ini
+      this.penjadwalan.tanggal = now.toISOString().slice(0, 10);
+
+      // Set jam default
+      this.penjadwalan.jam_mulai = "08:00";
+      this.penjadwalan.jam_selesai = "10:00";
+
+      // Update format datetime
+      this.updateWaktu();
+    },
+    updateWaktu() {
+      if (
+        this.penjadwalan.tanggal &&
+        this.penjadwalan.jam_mulai &&
+        this.penjadwalan.jam_selesai
+      ) {
+        this.penjadwalan.tgl_mulai = `${this.penjadwalan.tanggal}T${this.penjadwalan.jam_mulai}`;
+        this.penjadwalan.tgl_selesai = `${this.penjadwalan.tanggal}T${this.penjadwalan.jam_selesai}`;
+      }
     },
     async fetchInstrukturData(page = 1) {
       this.meta.current_page = page;
@@ -324,7 +367,13 @@ export default {
       }
     },
     submitForm() {
-      if (!this.penjadwalan.tgl_mulai || !this.penjadwalan.tgl_selesai || !this.penjadwalan.materi_id || !this.penjadwalan.instruktur_id) {
+      this.updateWaktu();
+      if (
+        !this.penjadwalan.tgl_mulai ||
+        !this.penjadwalan.tgl_selesai ||
+        !this.penjadwalan.materi_id ||
+        !this.penjadwalan.instruktur_id
+      ) {
         AlertMsg("Tanggal mulai dan selesai harus diisi", true);
         return;
       }
@@ -395,3 +444,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Untuk mengatur tampilan input time */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
+
+/* Grup input waktu */
+.time-input-group {
+  display: flex;
+  gap: 10px;
+}
+.time-input-group .form-control {
+  flex: 1;
+}
+</style>
