@@ -20,7 +20,7 @@ Route::get('/', function () {
 // dashboard admin route
 Auth::routes();
 
-Route::prefix('v1')->middleware('authd')->group(function () {
+Route::prefix('v1')->middleware('auth')->group(function () {
     Route::get('/admin', function () {
         return view('admin.v1.layouts.app');
     })->name('v1.admin.home');
